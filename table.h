@@ -1,9 +1,6 @@
 #ifndef __TABLE_H__
 #define __TABLE_H__
 
-#include <cstdlib>
-#include <windows.h>
-
 /*Note:
 	*** Trong bang:
 	- 0 la vi tri ko co gach

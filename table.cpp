@@ -3,33 +3,11 @@
 #include <cstdlib>
 #include <windows.h>
 #include <ctime>
+
 #include "table.h"
+#include "console.h"
 
 
-void clrscr()
-{
-	CONSOLE_SCREEN_BUFFER_INFO	csbiInfo;
-	HANDLE	hConsoleOut;
-	COORD	Home = {0,0};
-	DWORD	k;
-
-	hConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
-	GetConsoleScreenBufferInfo(hConsoleOut,&csbiInfo);
-
-	FillConsoleOutputCharacter(hConsoleOut,' ',csbiInfo.dwSize.X * csbiInfo.dwSize.Y,Home,&k);
-	csbiInfo.dwCursorPosition.X = 0;
-	csbiInfo.dwCursorPosition.Y = 0;
-	SetConsoleCursorPosition(hConsoleOut,csbiInfo.dwCursorPosition);
-}
-
-void gotoxy(int x, int y)		//chuyen con tro ve vi tri x, y
-{
-  static HANDLE h = NULL;  
-  if(!h)
-    h = GetStdHandle(STD_OUTPUT_HANDLE);
-  COORD c = { x, y };  
-  SetConsoleCursorPosition(h,c);
-}
 
 Table::Table( )		//khoi tao bang
 {
@@ -42,6 +20,7 @@ Table::Table( )		//khoi tao bang
 	for ( int i = 0; i < 12; ++i )		//bien ngang
 		table[0][i] = 1;
 	score = 0;
+	srand ( time(NULL) );	//sinh so ngau nhien
 }
 
 
@@ -49,23 +28,18 @@ void Table::show( ) const
 {
 	//clrscr( );
 	//system("cls");
-	gotoxy(0,0);
+	gotoxy( 0, 0 ); 	//quay lai dau tien de overwrite
 	char chr = 219;
 
+	gotoxy( 25, 1 );
+	for ( int j = 0; j < 24; ++j )
+		std::cout << '=';
 	for ( int i = 20 ; i >= 1; i-- )
-	{	
+	{
+		gotoxy( 25, 22 - i );
 		std::cout << "||";	//bien
-		for ( int j = 1; j <= 10; ++j )	
-		{	
-			// for ( int j = 0; j < 10; ++j )
-			// 	{
-			// 		if ( table[i][j] > 0 && k == 0)
-			// 			std::cout << ul << uc <<ur;
-			// 		else if ( table[i][j] > 0 && k == 1 )
-			// 			std::cout << dl << dc <<dr;
-			// 		else
-			// 			std::cout << "   ";
-			// 	}
+		for ( int j = 1; j <= 10; ++j )
+		{
 			if ( table[i][j] )
 				std::cout << chr << chr;
 			else
@@ -74,9 +48,12 @@ void Table::show( ) const
 		std::cout << "||" << std::endl;
 	}
 
+	gotoxy( 25, 22 );
 	for ( int j = 0; j < 24; ++j )
 		std::cout << '=';
-	std::cout << std::endl << "Score: " << score;
+
+	gotoxy( 25, 23 );
+	std::cout << "Score: " << score;
 }
 
 
@@ -103,7 +80,7 @@ void Table::create ( )
 					table[ pos[3][0] = 21 ][ pos[3][1] = 6] = 2;
 					break;
 				case 4:			//khoi T
-				table[ pos[2][0] = 21 ][ pos[2][1] = 6] = 2;
+				table[ pos[2][0] = 22 ][ pos[2][1] = 6] = 2;
 				table[ pos[3][0] = 23 ][ pos[3][1] = 5] = 2;
 				break;
 			case 5:			//khoi S
@@ -140,7 +117,7 @@ bool Table::spin ( )			//quay pi/2, neu la hinh vuong tra ve 0
 		deltaX = pos[i][0] - pos[0][0];
 		deltaY = pos[i][1] - pos[0][1];
 
-		table[ pos[i][0] ][ pos[i][1] ] = 0;	//xoa bo trang thai 
+		table[ pos[i][0] ][ pos[i][1] ] = 0;	//xoa bo trang thai
 
 		pos[i][0] = pos[0][0] + deltaY;
 		pos[i][1] = pos[0][1] - deltaX;
@@ -148,14 +125,14 @@ bool Table::spin ( )			//quay pi/2, neu la hinh vuong tra ve 0
 		if ( table[ pos[i][0] ][ pos[i][1] ] == 1 )		//kiem tra co gach bi vuong khi quay ko
 		{
 			for ( int i = 0; i < 4; ++i )		// phuc hoi vi tri
-				pos[i][0] = oldPos[i][0] , pos[i][1] = oldPos[i][1];	
+				pos[i][0] = oldPos[i][0] , pos[i][1] = oldPos[i][1];
 
-			setBrickNum( 2 );	//phuc hoi khoi gach		
+			setBrickNum( 2 );	//phuc hoi khoi gach
 			return FALSE;
 		}
 	}
 
-	setBrickNum( 2 ); //phuc hoi khoi gach		
+	setBrickNum( 2 ); //phuc hoi khoi gach
 	show( );	//ve lai
 	return TRUE;
 
@@ -171,7 +148,7 @@ void Table::moveLeft ( )
 		table[ pos[1][0] ][ --pos[1][1] ] = 2;
 		table[ pos[2][0] ][ --pos[2][1] ] = 2;
 		table[ pos[3][0] ][ --pos[3][1] ] = 2;
-		
+
 		show( );
 	}
 
@@ -187,7 +164,7 @@ void Table::moveRight ( )
 		table[ pos[1][0] ][ ++pos[1][1] ] = 2;
 		table[ pos[2][0] ][ ++pos[2][1] ] = 2;
 		table[ pos[3][0] ][ ++pos[3][1] ] = 2;
-		
+
 		show( );
 	}
 
@@ -203,8 +180,8 @@ void Table::moveDown ( )
 		table[ --pos[1][0] ][ pos[1][1] ] = 2;
 		table[ --pos[2][0] ][ pos[2][1] ] = 2;
 		table[ --pos[3][0] ][ pos[3][1] ] = 2;
-		
-		show( );		
+
+		show( );
 	}
 }
 
@@ -213,12 +190,7 @@ void Table::fall ( )
 {
 	while ( checkMoveDown() )			//dich xuong neu co the
 	{
-		setBrickNum ( 0 );	// xoa
-
-		table[ --pos[0][0] ][ pos[0][1] ] = 2;	//tai lap
-		table[ --pos[1][0] ][ pos[1][1] ] = 2;
-		table[ --pos[2][0] ][ pos[2][1] ] = 2;
-		table[ --pos[3][0] ][ pos[3][1] ] = 2;
+		moveDown( );
 	}
 }
 
@@ -255,13 +227,13 @@ bool Table::checkMoveDown ( )
 		 || table[ pos[2][0] - 1 ][ pos[2][1] ] == 1
 		 || table[ pos[3][0] - 1 ][ pos[3][1] ] == 1 )
 
-	{	 
+	{
 		setBrickNum ( 1 );	///bien thanh gach cu
 		return FALSE;
 	}
-	else  
+	else
 		return TRUE;
-	
+
 }
 
 void Table::getFullRows ( )	//tra ve hang full gach va tang diem
