@@ -60,7 +60,7 @@ bool start( char level )
 
 	score = play( level );		//chuyen level ve so
 
-	if ( score = -1 )		//thoat ctr
+	if ( score == -1 )		//thoat ctr
 		return FALSE;
 	//gameOver == TRUE
 	gotoxy( 20, 9 ); std::cout << "                                                   ";
@@ -70,6 +70,8 @@ bool start( char level )
 	gotoxy( 20, 13); std::cout << "                                                   ";
 
 	Sleep( 2000 );		// wait 2 second
+	
+	return TRUE;	//tiep tuc
 }
 
 char settings( )
