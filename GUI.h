@@ -29,7 +29,7 @@ void mainMenu( )
 
 	setTextColor( LIGHTYELLOW );
 
-	while ( !exit )				//chay den khi co lenh thoat
+	while ( !exit )		 		//chay den khi co lenh thoat
 	{
 		printHeader( );		//in ra 
 	
