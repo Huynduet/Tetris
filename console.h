@@ -40,7 +40,7 @@ void setTextColor(WORD color)       //doi mau chu
     SetConsoleTextAttribute(hConsoleOutput, wAttributes);
 }
 
-void restart()          //khoi dong lai chuong trinh
+int restart()          //khoi dong lai chuong trinh, tra ve -1 khi thoat ctr vua goi,
 {
     char ownPth[MAX_PATH]; 
 
@@ -52,12 +52,12 @@ void restart()          //khoi dong lai chuong trinh
         GetModuleFileName(hModule,ownPth, (sizeof(ownPth))); 
 
         system( ownPth );       //khoi dong lai 
-        return;
+        return -1 ;
     }
     else
     {
         std::cout << "Module handle is NULL!" << std::endl << "Restart manually!!" ;
-        return;
+        return -1 ;
     }
 }
 

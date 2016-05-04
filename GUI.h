@@ -1,9 +1,11 @@
 #ifndef __GUI_H__
 #define __GUI_H__
 
-
+#include "table.h"
+#include "table.cpp"
+#include "console.h"
 void mainMenu( );	//man hinh khoi dong
-void start ( char level );		//bat dau choi, lay diem tu play( )
+bool start ( char level );		//bat dau choi, lay diem tu play( )
 char settings( );	//cai dat
 void info( );		//thong tin game
 bool quit( );		//thoat game
@@ -41,7 +43,7 @@ void mainMenu( )
 	
 		if ( key == '1' )
 			//std::cout <<"ffffffffffff''", getch();
-			start( level );		
+			exit = !start( level );		
 		else if ( key == '2' )
 			level = settings( );
 		else if ( key == '3' )
@@ -51,12 +53,15 @@ void mainMenu( )
 	}
 }
 
-void start( char level )
+bool start( char level )
 {
 	int score;
 	std::cout <<"Don't delete this line";
 
 	score = play( level );		//chuyen level ve so
+
+	if ( score = -1 )		//thoat ctr
+		return FALSE;
 	//gameOver == TRUE
 	gotoxy( 20, 9 ); std::cout << "                                                   ";
 	gotoxy( 20, 10); std::cout << "_______________________GAME OVER___________________";
@@ -203,7 +208,7 @@ int play( int level )
 	        		t.fall( );
 	        	else if ( key == '8') 		// xoay
 	        		t.spin( );
-	        	else if ( key == 'p' || key == 'P' )		// tam dung pause
+	        	else if ( key == 'p' || key == 'P' || key == 13 )		// tam dung pause
 	        		while ( 1 )
 	        		{
 	        			system( "cls" );	//xoa man hinh, chong gian lan
@@ -217,12 +222,12 @@ int play( int level )
 	        			std::cout << "3. MAIN MENU";
 
 	        			key = getch( );		//doc lua chon
-	        			if ( key == 'p' || key == 'P' || key == '1' )	//tiep tuc
+	        			if ( key == 'p' || key == 'P' || key == 13 || key == '1' )	//tiep tuc
 	        				break;
 	        			else if ( key == '2' && confirm("RESTART") )		//choi lai ( can  xac nhan )
 	        				return play( level );			
 	        			else if ( key == '3' && confirm("BACK TO MAIN MENU") )		//quay ve
-	        				restart( );
+	        				return restart( );
 	        		}	        		
 	       }
 
