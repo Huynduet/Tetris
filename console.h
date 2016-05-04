@@ -88,4 +88,4 @@ bool confirm( char const action[] )     //xac nhan lua chon
     return FALSE;
 }
 
-#endif  //__CONSOLE_H__
+#endif  //__CONSOLE_H__ 
