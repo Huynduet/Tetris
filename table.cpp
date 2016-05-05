@@ -24,6 +24,7 @@ Table::Table( )		//khoi tao bang
 }
 
 
+
 void Table::show( ) const
 {
 	//clrscr( );
@@ -32,28 +33,54 @@ void Table::show( ) const
 	char chr = 219;
 
 	gotoxy( 25, 1 );
-	for ( int j = 0; j < 24; ++j )
-		std::cout << '=';
+	for ( int j = 0; j < 22; ++j )
+	{
+
+		std::cout << (char)220;
+	}
+		
 	for ( int i = 20 ; i >= 1; i-- )
 	{
 		gotoxy( 25, 22 - i );
-		std::cout << "||";	//bien
+		std::cout << (char)221;	//bien
+
 		for ( int j = 1; j <= 10; ++j )
 		{
 			if ( table[i][j] )
+			{
 				std::cout << chr << chr;
+			}
+				
 			else
 				std::cout << "  ";
 		}
-		std::cout << "||" << std::endl;
+
+		std::cout << (char)222 << std::endl;
 	}
 
 	gotoxy( 25, 22 );
-	for ( int j = 0; j < 24; ++j )
-		std::cout << '=';
+	for ( int j = 0; j < 22; ++j )
+	{
 
-	gotoxy( 25, 23 );
-	std::cout << "Score: " << score;
+		std::cout << (char)223;
+	}
+		
+	gotoxy( 3, 5 );
+	std::cout << "~~~~~~~~~~~~~~~";
+	gotoxy( 3, 7 );
+	std::cout << "  Score: " << score;
+	gotoxy( 3, 9 );
+	std::cout << "~~~~~~~~~~~~~~~";
+	gotoxy( 4, 13 );
+	std::cout << " Left  :  A";
+	gotoxy( 4, 14 );
+	std::cout << "Right  :  D";
+	gotoxy( 4, 15 );
+	std::cout << " Spin  :  W";
+	gotoxy( 4, 16 );
+	std::cout << " Drop  :  S";
+	gotoxy( 4, 17 );
+	std::cout << "Pause  :  P";
 }
 
 

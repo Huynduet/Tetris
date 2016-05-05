@@ -6,7 +6,6 @@
 
 #include "console.h"
 #include "table.h"
-#include "table.cpp"
 #include "GUI.h"
 
 int main() 

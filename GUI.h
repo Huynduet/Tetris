@@ -4,6 +4,7 @@
 #include "table.h"
 #include "table.cpp"
 #include "console.h"
+
 void mainMenu( );	//man hinh khoi dong
 bool start ( char level );		//bat dau choi, lay diem tu play( )
 char settings( );	//cai dat
@@ -69,7 +70,7 @@ bool start( char level )
 	gotoxy( 20, 12); std::cout << "                YOUR SCORE : " << score << "             ";
 	gotoxy( 20, 13); std::cout << "                                                   ";
 
-	Sleep( 2000 );		// wait 2 second
+	Sleep( 5000 );		// wait 5 second
 	
 	return TRUE;	//tiep tuc
 }
@@ -202,13 +203,13 @@ int play( int level )
 	        {
 	        	key = getch();
 
-	        	if ( key == '4') 			// dich trai neu nhap 4
+	        	if ( key == 'a' || key == 'A' ) 			// dich trai neu nhap A
 	        		t.moveLeft( );
-	        	else if ( key == '6') 		// dich phai neu nhap 6
+	        	else if ( key == 'd' || key == 'D' ) 		// dich phai neu nhap D
 	        		t.moveRight( );
-	        	else if ( key == '5') 		// roi luon neu nhap 5
+	        	else if ( key == 's' || key == 'S') 		// roi luon neu nhap s
 	        		t.fall( );
-	        	else if ( key == '8') 		// xoay
+	        	else if ( key == 'w' || key == 'W' ) 		// xoay
 	        		t.spin( );
 	        	else if ( key == 'p' || key == 'P' || key == 13 )		// tam dung pause
 	        		while ( 1 )

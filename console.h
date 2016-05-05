@@ -76,14 +76,14 @@ bool confirm( char const action[] )     //xac nhan lua chon
     char key;
     gotoxy ( 20, 10 );    
 
-    std::cout << "COMFIRM: " << (action) << "  (Y/n)  ";
+    std::cout << "COMFIRM: " << (action) << "  (Y/N)  ";
     key = getch( );     //doc phim
     if ( key == 'Y' || key == 'y' || key == 13 )
         return TRUE;
     else if ( key == 'N' || key == 'n' )
         return FALSE;
     else 
-        std::cout << "Unknow key...";
+        std::cout << "Unknown key...";
     Sleep ( 500 );
     return FALSE;
 }
