@@ -6,15 +6,15 @@
 #include "console.h"
 
 void mainMenu( );	//man hinh khoi dong
-bool start ( char level );		//bat dau choi, lay diem tu play( )
-char settings( );	//cai dat
+bool start ( int level );		//bat dau choi, lay diem tu play( )
+int  settings( );	//cai dat
 void info( );		//thong tin game
 bool quit( );		//thoat game
 
 void printHeader( );	//cls va in ra chua tetris tren 6 dong dau
 int  play( int level );		//tra ve diem cua lan choi do
 void settingsColor( );	//thay mau trong settings
-char settingsLevel( );	//thay va tra ve do kho 1 - easy, 2 - normal, 3 - hard
+int settingsLevel( );	//thay va tra ve do kho 1 - easy, 2 - normal, 3 - hard
 
 
 
@@ -22,13 +22,13 @@ void mainMenu( )
 {
 
 	char key;
-	char level; //easy
+	int  level; //easy
 	bool exit;		//ktra thoat
 
 	level = 1;
 	exit = FALSE;
 
-	setTextColor( LIGHTYELLOW );
+	setTextColor( GREEN );
 
 	while ( !exit )		 		//chay den khi co lenh thoat
 	{
@@ -54,7 +54,7 @@ void mainMenu( )
 	}
 }
 
-bool start( char level )
+bool start( int level )
 {
 	int score;
 	std::cout <<"Don't delete this line";
@@ -75,10 +75,10 @@ bool start( char level )
 	return TRUE;	//tiep tuc
 }
 
-char settings( )
+int  settings( )
 {
 	char key;
-	char level = '1';	
+	int level = 1;	//easy
 
 	while ( 1 )
 	{
@@ -138,7 +138,7 @@ void settingsColor( )
 	}
 }
 
-char settingsLevel( )
+int  settingsLevel( )
 {
 	char key;
 
@@ -149,7 +149,7 @@ char settingsLevel( )
 		//do nothing
 	}
 
-	return key;
+	return (int) key;
 }
 void info( )		//thong tin game
 {
@@ -185,10 +185,30 @@ void printHeader( )
 int play( int level )
 {
 	Table t;	// choi tren Table nay
-	unsigned int timeDelay = 1000 - level * 150 ;	//thoi gian de roi
+	double timeDelay = 1000 - level * 300 ;	//thoi gian de roi
 	char key;		//phim bam vao
 
 	system( "cls" );
+
+	gotoxy( 3, 5 );
+	std::cout << "  LEVEL : " << level;
+
+	gotoxy( 3, 7 );
+	std::cout << "~~~~~~~~~~~~~~~";
+	gotoxy( 3, 8 );
+	std::cout << "  Score: " << t.getScore( );
+	gotoxy( 3, 10);
+	std::cout << "~~~~~~~~~~~~~~~";
+	gotoxy( 4, 13 );
+	std::cout << " Left  :  A";
+	gotoxy( 4, 14 );
+	std::cout << "Right  :  D";
+	gotoxy( 4, 15 );
+	std::cout << " Spin  :  W";
+	gotoxy( 4, 16 );
+	std::cout << " Drop  :  S";
+	gotoxy( 4, 17 );
+	std::cout << "Pause  :  P";
 
 	std::cout <"""""""""""";
 	while ( t.checkGameOver() == 0 )
@@ -197,7 +217,7 @@ int play( int level )
 
 		while ( t.checkMoveDown( ) )
 		{
-			Sleep( ( timeDelay --  ) + 3 );
+			Sleep( ( timeDelay *= 0.998  ) );
 			
 			while ( kbhit() ) 				//doi phim an	
 	        {

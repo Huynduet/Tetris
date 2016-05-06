@@ -64,23 +64,6 @@ void Table::show( ) const
 
 		std::cout << (char)223;
 	}
-		
-	gotoxy( 3, 5 );
-	std::cout << "~~~~~~~~~~~~~~~";
-	gotoxy( 3, 7 );
-	std::cout << "  Score: " << score;
-	gotoxy( 3, 9 );
-	std::cout << "~~~~~~~~~~~~~~~";
-	gotoxy( 4, 13 );
-	std::cout << " Left  :  A";
-	gotoxy( 4, 14 );
-	std::cout << "Right  :  D";
-	gotoxy( 4, 15 );
-	std::cout << " Spin  :  W";
-	gotoxy( 4, 16 );
-	std::cout << " Drop  :  S";
-	gotoxy( 4, 17 );
-	std::cout << "Pause  :  P";
 }
 
 
