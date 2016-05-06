@@ -35,7 +35,7 @@ void Table::show( ) const
 	gotoxy( 25, 1 );
 	for ( int j = 0; j < 22; ++j )
 	{
-
+		setTextColor( LIGHTGRAY );
 		std::cout << (char)220;
 	}
 		
@@ -46,24 +46,51 @@ void Table::show( ) const
 
 		for ( int j = 1; j <= 10; ++j )
 		{
-			if ( table[i][j] )
+			if ( table[i][j] == 1 )
 			{
+				setTextColor( LIGHTRED );
+				std::cout << chr << chr;
+			}
+			
+			else if ( table[i][j] == 2 )
+			{
+				setTextColor( LIGHTBLUE );
 				std::cout << chr << chr;
 			}
 				
 			else
 				std::cout << "  ";
 		}
-
+		setTextColor( LIGHTGRAY );
 		std::cout << (char)222 << std::endl;
 	}
 
-	gotoxy( 25, 22 );
+	gotoxy( 25, 22 ); 
 	for ( int j = 0; j < 22; ++j )
 	{
-
+		setTextColor( LIGHTGRAY );
 		std::cout << (char)223;
 	}
+	
+	setTextColor( LIGHTYELLOW );
+	gotoxy( 3, 5 );
+	std::cout << "~~~~~~~~~~~~~~~";
+	gotoxy( 3, 7 );
+	std::cout << "  Score: " << score;
+	gotoxy( 3, 9 );
+	std::cout << "~~~~~~~~~~~~~~~";
+	gotoxy( 5, 11);
+	std::cout << "HOW TO PLAY";
+	gotoxy( 4, 13 );
+	std::cout << " Left  :  A";
+	gotoxy( 4, 14 );
+	std::cout << "Right  :  D";
+	gotoxy( 4, 15 );
+	std::cout << " Spin  :  W";
+	gotoxy( 4, 16 );
+	std::cout << " Drop  :  S";
+	gotoxy( 4, 17 );
+	std::cout << "Pause  :  P";
 }
 
 
