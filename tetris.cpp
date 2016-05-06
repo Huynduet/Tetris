@@ -4,8 +4,6 @@
 #include <ctime>
 #include <windows.h>
 
-#include "console.h"
-#include "table.h"
 #include "GUI.h"
 
 int main() 

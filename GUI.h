@@ -6,15 +6,15 @@
 #include "console.h"
 
 void mainMenu( );	//man hinh khoi dong
-bool start ( char level );		//bat dau choi, lay diem tu play( )
-char settings( );	//cai dat
+bool start ( int level );		//bat dau choi, lay diem tu play( )
+int settings( );	//cai dat
 void info( );		//thong tin game
 bool quit( );		//thoat game
 
 void printHeader( );	//cls va in ra chua tetris tren 6 dong dau
 int  play( int level );		//tra ve diem cua lan choi do
 void settingsColor( );	//thay mau trong settings
-char settingsLevel( );	//thay va tra ve do kho 1 - easy, 2 - normal, 3 - hard
+int settingsLevel( );	//thay va tra ve do kho 1 - easy, 2 - normal, 3 - hard
 void printOption(int x1, int x2, int y); //In tuy chon, x1, x2, y la toa do 
 
 
@@ -22,24 +22,24 @@ void mainMenu( )
 {
 
 	char key;
-	char level; //easy
+	int level; //easy
 	bool exit;		//ktra thoat
-	int y = 13;
+	int y = 13; //Toa do dau tien cua con tro
 
 	level = 1;
 	exit = FALSE;
 
-	setTextColor( LIGHTYELLOW );
+	setTextColor( LIGHTGREEN );
 
 	while ( !exit )		 		//chay den khi co lenh thoat
 	{
 		printHeader( );		//in ra 
 	
 		gotoxy( 20, 10); std::cout << "                     MAIN MENU                     ";
-		gotoxy( 20, 13); std::cout << "                  1.   START                       ";
-		gotoxy( 20, 15); std::cout << "                  2.  SETTINGS                     ";
-		gotoxy( 20, 17); std::cout << "                  3.   INFO                        ";
-		gotoxy( 20, 19); std::cout << "                  4.   QUIT                        ";
+		gotoxy( 20, 13); std::cout << "                       START                       ";
+		gotoxy( 20, 15); std::cout << "                      SETTINGS                     ";
+		gotoxy( 20, 17); std::cout << "                       INFO                        ";
+		gotoxy( 20, 19); std::cout << "                       QUIT                        ";
 		
 		while( 1 )
 		{
@@ -47,12 +47,12 @@ void mainMenu( )
 			
 			key = getch( );	
 			
-			if(key == 's')
+			if(key == 's' || key == 'S') //Di chuyen con tro xuong
 			{
 				if(y <= 17)
 					y += 2;
 			}
-			else if(key == 'w')
+			else if(key == 'w' || key == 'W') //Di chuyen con tro len
 			{
 				if(y >= 15)
 					y -= 2;
@@ -76,7 +76,7 @@ void mainMenu( )
 
 }
 
-bool start( char level )
+bool start( int level )
 {
 	int score;
 	std::cout <<"Don't delete this line";
@@ -97,28 +97,51 @@ bool start( char level )
 	return TRUE;	//tiep tuc
 }
 
-char settings( )
+int settings( )
 {
 	char key;
-	char level = '1';	
+	int level = 1;	
+	int y = 13; //Toa do dau tien cua con tro
 
 	while ( 1 )
 	{
 		printHeader( );
 
 		gotoxy( 20, 10); std::cout << "                      SETTINGS                     ";
-		gotoxy( 20, 13); std::cout << "                  1.   COLOR                       ";
-		gotoxy( 20, 15); std::cout << "                  2.   LEVEL                       ";
-		gotoxy( 20, 17); std::cout << "                  3.   BACK                        ";
+		gotoxy( 20, 13); std::cout << "                       COLOR                       ";
+		gotoxy( 20, 15); std::cout << "                       LEVEL                       ";
+		gotoxy( 20, 17); std::cout << "                       BACK                        ";
 		
-		key = getch( );
-		if ( key == '1' )	settingsColor( );
-		else if ( key == '2' ) level = settingsLevel( );
-		else if ( key == '3' ) return level;	
+		while( 1 )
+		{
+			printOption(28, 58, y);
+			
+			key = getch( );	
+			
+			if(key == 's' || key == 'S') //Di chuyen con tro xuong
+			{
+				if(y <= 15)
+					y += 2;
+			}
+			else if(key == 'w' || key == 'W') //Di chuyen con tro len
+			{
+				if(y >= 15)
+					y -= 2;
+			}
+
+			printOption(28, 58, y);
+			
+			if(key == 13)
+				break;
+		}
+		
+		if(y == 13)
+			settingsColor( );
+		else if(y == 15)
+			level = settingsLevel( );
+		else if(y == 17)
+			return level;
 	}
-
-
-
 }
 
 void settingsColor( )
@@ -160,7 +183,7 @@ void settingsColor( )
 	}
 }
 
-char settingsLevel( )
+int settingsLevel( )
 {
 	char key;
 
@@ -171,7 +194,7 @@ char settingsLevel( )
 		//do nothing
 	}
 
-	return key;
+	return (int) key;
 }
 void info( )		//thong tin game
 {
@@ -207,7 +230,7 @@ void printHeader( )
 int play( int level )
 {
 	Table t;	// choi tren Table nay
-	unsigned int timeDelay = 1000 - level * 150 ;	//thoi gian de roi
+	double timeDelay = 1000 - level * 300 ;	//thoi gian de roi
 	char key;		//phim bam vao
 
 	system( "cls" );
@@ -219,7 +242,7 @@ int play( int level )
 
 		while ( t.checkMoveDown( ) )
 		{
-			Sleep( ( timeDelay --  ) + 3 );
+			Sleep( ( timeDelay *= 0.998 ) );
 			
 			while ( kbhit() ) 				//doi phim an	
 	        {
