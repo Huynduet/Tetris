@@ -16,7 +16,7 @@ int  play( int level );		//tra ve diem cua lan choi do
 void settingsColor( );	//thay mau trong settings
 int settingsLevel( );	//thay va tra ve do kho 1 - easy, 2 - normal, 3 - hard
 void printOption(int x1, int x2, int y); //In tuy chon, x1, x2, y la toa do 
-
+void delOption(int x1, int x2, int y); //Xoa tuy chon cu
 
 void mainMenu( )
 {
@@ -231,7 +231,7 @@ int play( int level )
 {
 	Table t;	// choi tren Table nay
 	double timeDelay = 1000 - level * 300 ;	//thoi gian de roi
-	char key;		//phim bam vao
+	char key, key2;		//phim bam vao
 
 	system( "cls" );
 
@@ -263,19 +263,45 @@ int play( int level )
 	        			gotoxy( 35, 9 );
 	        			std::cout << "PAUSE";
 	        			gotoxy( 30, 12 );
-	        			std::cout << "1. RESUME";
+	        			std::cout << "   RESUME";
 	        			gotoxy( 30, 14 );
-	        			std::cout << "2. RESTART";
+	        			std::cout << "   RESTART";
 	        			gotoxy( 30, 16 );
-	        			std::cout << "3. MAIN MENU";
+	        			std::cout << "   MAIN MENU";
 
-	        			key = getch( );		//doc lua chon
-	        			if ( key == 'p' || key == 'P' || key == 13 || key == '1' )	//tiep tuc
-	        				break;
-	        			else if ( key == '2' && confirm("RESTART") )		//choi lai ( can  xac nhan )
-	        				return play( level );			
-	        			else if ( key == '3' && confirm("BACK TO MAIN MENU") )		//quay ve
-	        				return restart( );
+	        			int y = 12; // Toa do dau tien cua con tro
+						while( 1 )
+						{
+							printOption(20, 50, y);
+							
+							key = getch( );	
+							
+							if(key == 's' || key == 'S') //Di chuyen con tro xuong
+							{
+								if(y <= 14)
+									y += 2;
+							}
+							else if(key == 'w' || key == 'W') //Di chuyen con tro len
+							{
+								if(y >= 14)
+									y -= 2;
+							}
+				
+							printOption(20, 50, y);
+							
+							if(key == 13)
+								break;
+						}
+						
+						if(y == 12) //tiep tuc
+						{
+							delOption(20, 50, y);
+							break;
+						}
+						else if(y == 14 && confirm("RESTART") ) //choi lai ( can  xac nhan )
+							return play( level );
+						else if(y == 16 && confirm("BACK TO MAIN MENU") ) //quay ve
+							return restart( );
 	        		}	        		
 	       }
 
@@ -296,23 +322,24 @@ void printOption(int x1, int x2, int y)
 	gotoxy( x2, y );
 	std::cout << "<--";
 	
-	if(y != 19)
-	{
-		gotoxy( x1, y+2 );
-		std::cout << "   ";
-		gotoxy( x2, y+2 );
-		std::cout << "   ";
-	}
-	
-	if(y != 13)
-	{
-		gotoxy( x1, y-2 );
-		std::cout << "   ";
-		gotoxy( x2, y-2 );
-		std::cout << "   ";
-	}
-	
-	
+	//Xoa con tro cu di
+	gotoxy( x1, y+2 );
+	std::cout << "   ";
+	gotoxy( x2, y+2 );
+	std::cout << "   ";
+
+	gotoxy( x1, y-2 );
+	std::cout << "   ";
+	gotoxy( x2, y-2 );
+	std::cout << "   ";
+}
+
+void delOption(int x1, int x2, int y)
+{
+	gotoxy( x1, y );
+	std::cout << "   ";
+	gotoxy( x2, y );
+	std::cout << "   ";
 }
 
 #endif //__GUI_H__
