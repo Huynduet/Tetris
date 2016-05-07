@@ -247,17 +247,17 @@ int play( int level )
 	while ( t.checkGameOver() == 0 )
 	{	
 		t.create( IDBrick );	//tao khoi moi
-		
-		//In ra vien gach tiep theo
-		gotoxy(56, 2);
-		std::cout << "NEXT";
-		//Ve them cai khung cho dep :v
-		printNextBrickFrame();
-		setTextColor( LIGHTGREEN );
-		t.printNextBrick( IDNextBrick );
 			
 		while ( t.checkMoveDown( ) )
 		{
+			//In ra vien gach tiep theo
+			gotoxy(56, 2);
+			std::cout << "NEXT";
+			//Ve them cai khung cho dep :v
+			printNextBrickFrame();
+			setTextColor( LIGHTGREEN );
+			t.printNextBrick( IDNextBrick );
+		
 			Sleep( ( timeDelay *= 0.998 ) );
 			
 			while ( kbhit() ) 				//doi phim an	
@@ -273,53 +273,53 @@ int play( int level )
 	        	else if ( key == 'w' || key == 'W' ) 		// xoay
 	        		t.spin( );
 	        	else if ( key == 'p' || key == 'P' || key == 13 )		// tam dung pause
-	        		while ( 1 ) //man hinh pause 
-	        		{
-	        			system( "cls" );	//xoa man hinh, chong gian lan
-	        			gotoxy( 35, 9 );
-	        			std::cout << "PAUSE";
-	        			gotoxy( 30, 12 );
-	        			std::cout << "   RESUME";
-	        			gotoxy( 30, 14 );
-	        			std::cout << "   RESTART";
-	        			gotoxy( 30, 16 );
-	        			std::cout << "   MAIN MENU";
+        		while ( 1 ) //man hinh pause 
+        		{
+        			system( "cls" );	//xoa man hinh, chong gian lan
+        			gotoxy( 35, 9 );
+        			std::cout << "PAUSE";
+        			gotoxy( 30, 12 );
+        			std::cout << "   RESUME";
+        			gotoxy( 30, 14 );
+        			std::cout << "   RESTART";
+        			gotoxy( 30, 16 );
+        			std::cout << "   MAIN MENU";
 
-	        			int y = 12; // Toa do dau tien cua con tro
-						while( 1 )
-						{
-							printOption(20, 50, y);
-							
-							key = getch( );	
-							
-							if(key == 's' || key == 'S') //Di chuyen con tro xuong
-							{
-								if(y <= 14)
-									y += 2;
-							}
-							else if(key == 'w' || key == 'W') //Di chuyen con tro len
-							{
-								if(y >= 14)
-									y -= 2;
-							}
-				
-							printOption(20, 50, y);
-							
-							if(key == 13)
-								break;
-						}
+        			int y = 12; // Toa do dau tien cua con tro
+					while( 1 )
+					{
+						printOption(20, 50, y);
 						
-						if(y == 12) //tiep tuc
+						key = getch( );	
+						
+						if(key == 's' || key == 'S') //Di chuyen con tro xuong
 						{
-							delOption(20, 50, y);
-							break;
+							if(y <= 14)
+								y += 2;
 						}
-						else if(y == 14 && confirm("RESTART") ) //choi lai ( can  xac nhan )
-							return play( level );
-						else if(y == 16 && confirm("BACK TO MAIN MENU") ) //quay ve
-							return restart( );
-	        		}	        		
-	       }
+						else if(key == 'w' || key == 'W') //Di chuyen con tro len
+						{
+							if(y >= 14)
+								y -= 2;
+						}
+			
+						printOption(20, 50, y);
+						
+						if(key == 13)
+							break;
+					}
+					
+					if(y == 12) //tiep tuc
+					{
+						delOption(20, 50, y);
+						break;
+					}
+					else if(y == 14 && confirm("RESTART") ) //choi lai ( can  xac nhan )
+						return play( level );
+					else if(y == 16 && confirm("BACK TO MAIN MENU") ) //quay ve
+						return restart( );
+        		}	        		
+	        }
 	       t.moveDown( );		// dich xuong
 	   	}
 
