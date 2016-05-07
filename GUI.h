@@ -15,12 +15,13 @@ void printHeader( );	//cls va in ra chua tetris tren 6 dong dau
 int  play( int level );		//tra ve diem cua lan choi do
 void settingsColor( );	//thay mau trong settings
 int settingsLevel( );	//thay va tra ve do kho 1 - easy, 2 - normal, 3 - hard
+int randIDBrick(); //tao so ngau nhien
+void printNextBrickFrame(); //In ra khung hien vien gach tiep theo
 void printOption(int x1, int x2, int y); //In tuy chon, x1, x2, y la toa do 
 void delOption(int x1, int x2, int y); //Xoa tuy chon cu
 
 void mainMenu( )
 {
-
 	char key;
 	int level; //easy
 	bool exit;		//ktra thoat
@@ -43,7 +44,7 @@ void mainMenu( )
 		
 		while( 1 )
 		{
-			printOption(28, 58, y);
+			printOption(28, 60, y);
 			
 			key = getch( );	
 			
@@ -58,7 +59,7 @@ void mainMenu( )
 					y -= 2;
 			}
 
-			printOption(28, 58, y);
+			printOption(28, 60, y);
 			
 			if(key == 13)
 				break;
@@ -114,7 +115,7 @@ int settings( )
 		
 		while( 1 )
 		{
-			printOption(28, 58, y);
+			printOption(28, 60, y);
 			
 			key = getch( );	
 			
@@ -129,7 +130,7 @@ int settings( )
 					y -= 2;
 			}
 
-			printOption(28, 58, y);
+			printOption(28, 60, y);
 			
 			if(key == 13)
 				break;
@@ -200,7 +201,7 @@ void info( )		//thong tin game
 {
 	printHeader( );
 
-	
+	system("notepad README.txt");
 }
 bool quit( )		//thoat game
 {
@@ -224,22 +225,37 @@ void printHeader( )
 	gotoxy( 20, 6 ); std::cout << "/__/   /_______/    /__/   /__/  /__//__/ /_________/";
 }
 
-
-
+int randIDBrick()
+{
+	srand(time(NULL));
+	return rand() % 7;
+}
 
 int play( int level )
 {
 	Table t;	// choi tren Table nay
 	double timeDelay = 1000 - level * 300 ;	//thoi gian de roi
-	char key, key2;		//phim bam vao
-
+	char key;		//phim bam vao
+	int IDBrick, IDNextBrick; //So thu tu cua gach
+	
 	system( "cls" );
-
-	std::cout <"""""""""""";
+	
+	//Tao 2 khoi gach dau tien
+	IDBrick = randIDBrick(); 
+	IDNextBrick = randIDBrick();
+	
 	while ( t.checkGameOver() == 0 )
-	{
-		t.create( );	//tao khoi moi
-
+	{	
+		t.create( IDBrick );	//tao khoi moi
+		
+		//In ra vien gach tiep theo
+		gotoxy(56, 2);
+		std::cout << "NEXT";
+		//Ve them cai khung cho dep :v
+		printNextBrickFrame();
+		setTextColor( LIGHTGREEN );
+		t.printNextBrick( IDNextBrick );
+			
 		while ( t.checkMoveDown( ) )
 		{
 			Sleep( ( timeDelay *= 0.998 ) );
@@ -257,7 +273,7 @@ int play( int level )
 	        	else if ( key == 'w' || key == 'W' ) 		// xoay
 	        		t.spin( );
 	        	else if ( key == 'p' || key == 'P' || key == 13 )		// tam dung pause
-	        		while ( 1 )
+	        		while ( 1 ) //man hinh pause 
 	        		{
 	        			system( "cls" );	//xoa man hinh, chong gian lan
 	        			gotoxy( 35, 9 );
@@ -304,15 +320,38 @@ int play( int level )
 							return restart( );
 	        		}	        		
 	       }
-
 	       t.moveDown( );		// dich xuong
 	   	}
 
 	   	t.getFullRows( );	//lay diem
+	   	IDBrick = IDNextBrick; //Gan khoi cu thanh khoi moi
+		IDNextBrick = randIDBrick(); //Tao khoi gach tiep theo
 	}
 
 	return t.getScore( );	//lay diem 
 
+}
+
+void printNextBrickFrame()
+{
+	int i;
+	setTextColor( LIGHTGRAY );
+	gotoxy( 56, 4 );
+	for ( i = 0; i < 12; i++ )
+		std::cout << (char)220;
+	for ( i = 5 ; i < 10; i++ )
+	{
+		gotoxy( 56, i );
+		std::cout << (char)221;	//bien
+	}
+	for ( i = 5 ; i < 10; i++ )
+	{
+		gotoxy( 67, i );
+		std::cout << (char)222;	//bien
+	}
+	gotoxy( 56, 9 ); 
+	for ( i = 0; i < 12; i++ )
+		std::cout << (char)223;
 }
 
 void printOption(int x1, int x2, int y)
@@ -334,6 +373,7 @@ void printOption(int x1, int x2, int y)
 	std::cout << "   ";
 }
 
+//Xoa con tro vua hien len man hinh
 void delOption(int x1, int x2, int y)
 {
 	gotoxy( x1, y );

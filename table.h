@@ -23,7 +23,8 @@ public:
 	Table( );		//tao bang toan 0 tru hang 0
 	void show ( ) const ;			//ve bang
 
-	void create ( );
+	void create ( int style );
+	void printNextBrick ( int style );
 	void setBrickNum ( int number );	//chuyen so o cac vien gach dang roi ve number
 	bool spin ( );			//quay pi/2, neu la hinh vuong tra ve 0
 	void moveLeft ( );		//dich trai

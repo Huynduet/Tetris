@@ -27,9 +27,6 @@ Table::Table( )		//khoi tao bang
 
 void Table::show( ) const
 {
-	//clrscr( );
-	//system("cls");
-	gotoxy( 0, 0 ); 	//quay lai dau tien de overwrite
 	char chr = 219;
 
 	gotoxy( 25, 1 );
@@ -54,7 +51,7 @@ void Table::show( ) const
 			
 			else if ( table[i][j] == 2 )
 			{
-				setTextColor( LIGHTBLUE );
+				setTextColor( LIGHTGREEN );
 				std::cout << chr << chr;
 			}
 				
@@ -72,12 +69,12 @@ void Table::show( ) const
 		std::cout << (char)223;
 	}
 	
-	setTextColor( LIGHTYELLOW );
-	gotoxy( 3, 5 );
+	setTextColor( LIGHTGREEN );
+	gotoxy( 3, 2 );
 	std::cout << "~~~~~~~~~~~~~~~";
-	gotoxy( 3, 7 );
+	gotoxy( 3, 4 );
 	std::cout << "  Score: " << score;
-	gotoxy( 3, 9 );
+	gotoxy( 3, 6 );
 	std::cout << "~~~~~~~~~~~~~~~";
 	gotoxy( 5, 11);
 	std::cout << "HOW TO PLAY";
@@ -93,12 +90,11 @@ void Table::show( ) const
 	std::cout << "Pause  :  P";
 }
 
-
-void Table::create ( )
+void Table::create ( int style )
 {
 	table[ pos[0][0] = 22 ][ pos[0][1] = 5] = 2;
 	table[ pos[1][0] = 21 ][ pos[1][1] = 5] = 2;
-	switch( style = rand() % 7 )
+	switch( style )
 	{
 		case 0:			// khoi O
 		table[ pos[2][0] = 22 ][ pos[2][1] = 6] = 2;
@@ -129,6 +125,69 @@ void Table::create ( )
 		table[ pos[3][0] = 22 ][ pos[3][1] = 4] = 2;
 		break;
 	}
+}
+
+void Table::printNextBrick( int style )
+{
+	int i, j, y;
+	//Khai bao mang[4][2] chua gach tiep theo
+	int **posNext = new int*[4];
+	for(i = 0; i < 4; i++)
+		posNext[i] = new int[2];
+	
+	for(i = 0; i < 4; i++)
+		for(j = 0; j < 2; j++)
+			posNext[i][j] = 0;
+	
+	switch( style )
+	{
+		case 0:			// khoi O
+		posNext[0][0] = 1; posNext[1][0] = 1; 
+		posNext[1][1] = 1; posNext[0][1] = 1; 
+		break;
+			case 1:			//khoi I
+			posNext[0][0] = 1; posNext[2][0] = 1; 
+			posNext[1][0] = 1; posNext[3][0] = 1;
+			break;
+				case 2:			//khoi 	J
+				posNext[0][0] = 1; posNext[0][1] = 1; 
+				posNext[1][1] = 1; posNext[2][1] = 1;
+				break;
+					case 3:			//khoi L
+					posNext[2][0] = 1; posNext[0][1] = 1; 
+					posNext[1][1] = 1; posNext[2][1] = 1;
+					break;
+				case 4:			//khoi T
+				posNext[1][0] = 1; posNext[0][1] = 1; 
+				posNext[1][1] = 1; posNext[2][1] = 1;
+				break;
+			case 5:			//khoi S
+			posNext[1][0] = 1; posNext[0][1] = 1; 
+			posNext[1][1] = 1; posNext[2][0] = 1;
+			break;
+		case 6:			//khoi Z
+		posNext[1][0] = 1; posNext[0][0] = 1; 
+		posNext[1][1] = 1; posNext[2][1] = 1;
+		break;
+	}
+	//In ra vien gach tiep theo 
+	y = 6; //Tung do
+	for(j = 0; j < 2; j++)
+	{
+		gotoxy(58, y);
+		for(i = 0; i < 4; i++)
+		{
+			if( posNext[i][j] == 1 )
+				std::cout << (char)219 << (char)219;
+			else 
+				std:: cout << "  ";
+		}
+		y++;
+	}
+	//Giai phong bo nho
+	for(i = 0; i < 4; i++)
+		delete []posNext[i];
+	delete []posNext;
 }
 
 void Table::setBrickNum ( int number )
@@ -303,33 +362,3 @@ void Table::delRow ( int row )	//xoa hang  row  (xoa den dau ve lai den do)
 }
 
 int Table::getScore ( ) const { return score; }
-
-
-// int main()
-// {
-// 	Table t;
-
-// 	while (1 )
-// 	{
-// 		t.create();
-// 		t.moveDown();
-// 		t.moveDown();
-// 		t.moveDown();
-// 		t.moveDown();	getch();
-// 		t.moveDown();	getch();
-// 		t.moveDown();	getch();
-// 		t.spin();	getch();
-// 		t.spin();	getch();
-// 		t.spin();	getch();
-// 		t.moveDown();	getch();
-// 		t.moveDown();	getch();
-// 		t.show();
-// 		getch();
-// 		t.moveRight();t.show();	getch();
-// 		t.moveRight();t.show();
-// 		t.moveLeft();t.show();	getch();
-// //		t.moveDown();t.show();
-// 		t.fall();t.show();	getch();
-// 		t.delRow( 2 );
-// 	}
-// }
