@@ -142,8 +142,8 @@ void Table::printNextBrick( int style )
 	switch( style )
 	{
 		case 0:			// khoi O
-		posNext[0][0] = 1; posNext[1][0] = 1; 
-		posNext[1][1] = 1; posNext[0][1] = 1; 
+		posNext[2][0] = 1; posNext[1][0] = 1; 
+		posNext[1][1] = 1; posNext[2][1] = 1; 
 		break;
 			case 1:			//khoi I
 			posNext[0][0] = 1; posNext[2][0] = 1; 
