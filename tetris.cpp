@@ -5,9 +5,12 @@
 #include <windows.h>
 
 #include "GUI.h"
+#include "GUI.cpp"
 
 int main() 
 {
-	mainMenu( );
+	GUI Main;
+	
+	Main.mainMenu( );
 	return 0;
 }

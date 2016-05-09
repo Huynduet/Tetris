@@ -9,7 +9,7 @@
 
 
 
-Table::Table( )		//khoi tao bang
+Table::Table(  )		//khoi tao bang
 {
 	for ( int i = 1; i < 25; ++i )		//vung nhin thay
 		for ( int j = 1; j <= 10; ++j )
@@ -19,7 +19,6 @@ Table::Table( )		//khoi tao bang
 
 	for ( int i = 0; i < 12; ++i )		//bien ngang
 		table[0][i] = 1;
-	score = 0;
 	srand ( time(NULL) );	//sinh so ngau nhien
 }
 
@@ -29,18 +28,10 @@ void Table::show( ) const
 {
 	char chr = 219;
 
-	gotoxy( 25, 1 );
-	for ( int j = 0; j < 22; ++j )
-	{
-		setTextColor( LIGHTGRAY );
-		std::cout << (char)220;
-	}
-		
+	
 	for ( int i = 20 ; i >= 1; i-- )
 	{
-		gotoxy( 25, 22 - i );
-		std::cout << (char)221;	//bien
-
+		gotoxy( 26, 22 - i );
 		for ( int j = 1; j <= 10; ++j )
 		{
 			if ( table[i][j] == 1 )
@@ -58,37 +49,9 @@ void Table::show( ) const
 			else
 				std::cout << "  ";
 		}
-		setTextColor( LIGHTGRAY );
-		std::cout << (char)222 << std::endl;
 	}
-
-	gotoxy( 25, 22 ); 
-	for ( int j = 0; j < 22; ++j )
-	{
-		setTextColor( LIGHTGRAY );
-		std::cout << (char)223;
-	}
-	
-	setTextColor( LIGHTGREEN );
-	gotoxy( 3, 2 );
-	std::cout << "~~~~~~~~~~~~~~~";
-	gotoxy( 3, 4 );
-	std::cout << "  Score: " << score;
-	gotoxy( 3, 6 );
-	std::cout << "~~~~~~~~~~~~~~~";
-	gotoxy( 5, 11);
-	std::cout << "HOW TO PLAY";
-	gotoxy( 4, 13 );
-	std::cout << " Left  :  A";
-	gotoxy( 4, 14 );
-	std::cout << "Right  :  D";
-	gotoxy( 4, 15 );
-	std::cout << " Spin  :  W";
-	gotoxy( 4, 16 );
-	std::cout << " Drop  :  S";
-	gotoxy( 4, 17 );
-	std::cout << "Pause  :  P";
 }
+
 
 void Table::create ( int style )
 {
@@ -125,6 +88,8 @@ void Table::create ( int style )
 		table[ pos[3][0] = 22 ][ pos[3][1] = 4] = 2;
 		break;
 	}
+
+	tempScore = 0;
 }
 
 void Table::printNextBrick( int style )
@@ -197,7 +162,7 @@ void Table::setBrickNum ( int number )
 }
 
 
-bool Table::spin ( )			//quay pi/2, neu la hinh vuong tra ve 0
+bool Table::rotate ( )			//quay pi/2, neu la hinh vuong tra ve 0
 {
 	if ( style == 0 )	//la kieu O thi dung lai
 		return FALSE;
@@ -357,8 +322,8 @@ void Table::delRow ( int row )	//xoa hang  row  (xoa den dau ve lai den do)
 	for ( int j = row ; j < 21; ++j )
 		for ( int k = 1; k <= 10; ++k )
 			table[j][k] = table[j + 1][k];
-	score ++;
+	tempScore ++;
 	show( );	//ve lai
 }
 
-int Table::getScore ( ) const { return score; }
+int Table::getScore ( ) const { return tempScore; }

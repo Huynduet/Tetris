@@ -3,8 +3,9 @@
 
 #include <windows.h>
 #include <iostream>
+#include <conio.h>
 
-enum
+enum COLOR
 {
     BLACK,
     BLUE,
@@ -22,6 +23,18 @@ enum
     LIGHTPURPLE,
     LIGHTYELLOW,
     LIGHTWHITE
+};
+
+enum KEY_PRESSED //Phim dieu khien
+{
+	KEY_UP ,
+	KEY_DOWN ,
+	KEY_LEFT ,
+	KEY_RIGHT ,
+	ENTER ,
+	ESCAPE ,
+	PAUSE ,
+	UNKNOWN 
 };
 
 void setTextColor(WORD color)       //doi mau chu
@@ -61,6 +74,48 @@ int restart()          //khoi dong lai chuong trinh, tra ve -1 khi thoat ctr vua
     }
 }
 
+WORD key_press()
+{
+	char key;
+	
+	key = getch( );	
+	
+	if ( key == -32 )
+	{
+		switch( getch() )
+		{
+			case 72:
+			return KEY_UP;
+				case 80:
+				return KEY_DOWN;
+					case 75:
+					return KEY_LEFT;
+						case 77:
+						return KEY_RIGHT;
+		}
+	}
+
+	switch( key )
+	{
+		case 'a': case 'A':
+		return KEY_LEFT;
+			case 's': case 'S':
+			return KEY_DOWN;
+				case 'd': case 'D':
+				return KEY_RIGHT;
+					case 'w': case 'W':
+					return KEY_UP;
+				case 'p': case 'P':
+				return	PAUSE;
+			case 13: case 32:
+			return ENTER;
+		case 27:
+		return ESCAPE;
+	}
+
+	return UNKNOWN;	//ko co trong khai bao
+}
+
 void gotoxy(int x, int y)       //chuyen con tro ve vi tri x, y
 {
     static HANDLE h = NULL;
@@ -77,15 +132,15 @@ bool confirm( char const action[] )     //xac nhan lua chon
     gotoxy ( 20, 10 );    
 
     std::cout << "COMFIRM: " << (action) << "  (Y/N)  ";
-    key = getch( );     //doc phim
-    if ( key == 'Y' || key == 'y' || key == 13 )
-        return TRUE;
-    else if ( key == 'N' || key == 'n' )
-        return FALSE;
-    else 
-        std::cout << "Unknown key...";
-    Sleep ( 500 );
-    return FALSE;
+
+    while ( TRUE )
+    {
+        key = getch( );     //doc phim
+        if ( key == 'Y' || key == 'y' || key == 13 )
+            return TRUE;
+        else if ( key == 'N' || key == 'n' )
+            return FALSE;
+    }
 }
 
 #endif  //__CONSOLE_H__ 
