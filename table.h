@@ -5,9 +5,7 @@
 /*Note:
 	*** Trong bang:
 	- 0 la vi tri ko co gach
-	- 1 la vi tri gach cu, da roi
-	- 2 la nhung vien gach dang roi
-
+	- 1 - 7 la vi tri gach
 */
 
 class Table

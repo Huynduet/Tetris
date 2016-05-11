@@ -39,12 +39,12 @@ void Table::show( ) const
 				setTextColor(  ( table[i][j] >= 15 ) ? table[i][j] - 8 :  table[i][j] );
 				std::cout << chr << chr;
 			}
-			
+			/*
 			else if ( table[i][j] == 2 )
 			{
 				setTextColor( LIGHTGREEN );
 				std::cout << chr << chr;
-			}
+			}*/
 				
 			else
 				std::cout << "  ";
@@ -103,37 +103,37 @@ void Table::printNextBrick( int ID )
 	
 	for(i = 0; i < 4; i++)
 		for(j = 0; j < 2; j++)
-			posNext[i][j] = 0;
+			posNext[i][j] = -1;
 	
 	switch( ID )
 	{
 		case 0:			// khoi O
-		posNext[2][0] = 1; posNext[1][0] = 1; 
-		posNext[1][1] = 1; posNext[2][1] = 1; 
+		posNext[2][0] = ID; posNext[1][0] = ID; 
+		posNext[1][1] = ID; posNext[2][1] = ID; 
 		break;
 			case 1:			//khoi I
-			posNext[0][0] = 1; posNext[2][0] = 1; 
-			posNext[1][0] = 1; posNext[3][0] = 1;
+			posNext[0][0] = ID; posNext[2][0] = ID; 
+			posNext[1][0] = ID; posNext[3][0] = ID;
 			break;
 				case 2:			//khoi 	J
-				posNext[0][0] = 1; posNext[0][1] = 1; 
-				posNext[1][1] = 1; posNext[2][1] = 1;
+				posNext[0][0] = ID; posNext[0][1] = ID; 
+				posNext[1][1] = ID; posNext[2][1] = ID;
 				break;
 					case 3:			//khoi L
-					posNext[2][0] = 1; posNext[0][1] = 1; 
-					posNext[1][1] = 1; posNext[2][1] = 1;
+					posNext[2][0] = ID; posNext[0][1] = ID; 
+					posNext[1][1] = ID; posNext[2][1] = ID;
 					break;
 				case 4:			//khoi T
-				posNext[1][0] = 1; posNext[0][1] = 1; 
-				posNext[1][1] = 1; posNext[2][1] = 1;
+				posNext[1][0] = ID; posNext[0][1] = ID; 
+				posNext[1][1] = ID; posNext[2][1] = ID;
 				break;
 			case 5:			//khoi S
-			posNext[1][0] = 1; posNext[0][1] = 1; 
-			posNext[1][1] = 1; posNext[2][0] = 1;
+			posNext[1][0] = ID; posNext[0][1] = ID; 
+			posNext[1][1] = ID; posNext[2][0] = ID;
 			break;
 		case 6:			//khoi Z
-		posNext[1][0] = 1; posNext[0][0] = 1; 
-		posNext[1][1] = 1; posNext[2][1] = 1;
+		posNext[1][0] = ID; posNext[0][0] = ID; 
+		posNext[1][1] = ID; posNext[2][1] = ID;
 		break;
 	}
 	//In ra vien gach tiep theo 
@@ -143,8 +143,11 @@ void Table::printNextBrick( int ID )
 		gotoxy(58, y);
 		for(i = 0; i < 4; i++)
 		{
-			if( posNext[i][j] == 1 )
+			if( posNext[i][j] >= 0 )
+			{
+				setTextColor ( ID + 7 );
 				std::cout << (char)219 << (char)219;
+			}
 			else 
 				std:: cout << "  ";
 		}

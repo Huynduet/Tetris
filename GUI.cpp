@@ -84,6 +84,8 @@ void GUI::start( )
 
 void GUI::settings( )
 {
+	cursor = 13;
+
 	while ( TRUE )
 	{
 		printHeader( );
@@ -117,45 +119,42 @@ void GUI::settings( )
 		}
 		
 		if(cursor == 13)
+		{
+			delCursor ( 28, 60, cursor);
 			settingsColor( );
+		}
 		else if(cursor == 15)
 			settingsLevel( );
 		else if(cursor == 17)
+		{
+			cursor = 13;
 			return;
+		}
 	}
 }
 
 void GUI::settingsColor( )
 {
 	char key;
-	gotoxy( 15, 15);	std::cout << "NOTE: If you don't see any color of 8 colors";
-	gotoxy( 15, 16);	std::cout << "     Perhaps it's your background color     ";
-	gotoxy( 15, 17);	std::cout << "                                            ";
+	gotoxy( 24, 15);	std::cout << "NOTE: If you don't see any color of 8 colors";
+	gotoxy( 24, 16);	std::cout << "     Perhaps it's your background color     ";
+	gotoxy( 24, 17);	std::cout << "                                            ";
 
-	gotoxy( 20, 18); 
-	setTextColor(LIGHTYELLOW);	std::cout << "1.YELLOW   ";
-	setTextColor(LIGHTBLUE);		std::cout << "2.BLUE    ";
+	gotoxy( 28, 18); 
+	setTextColor(LIGHTGRAY);	std::cout << "1.GRAY    ";
+	setTextColor(LIGHTBLUE);	std::cout << "2.BLUE    ";
 	setTextColor(LIGHTGREEN);	std::cout << "3.GREEN   ";
-	setTextColor(LIGHTCYAN);		std::cout << "4.CYAN    ";
+	setTextColor(LIGHTCYAN);	std::cout << "4.CYAN    ";
 
-	gotoxy( 20, 20); 
+	gotoxy( 28, 20); 
 	setTextColor(LIGHTRED);		std::cout << "5.RED     ";
 	setTextColor(LIGHTPURPLE);	std::cout << "6.PURPLE  ";
-	setTextColor(LIGHTGRAY);		std::cout << "7.GRAY    ";
+	setTextColor(LIGHTYELLOW);	std::cout << "7.YELLOW  ";
 	setTextColor(LIGHTWHITE);	std::cout << "8.WHITE   ";
 
 	while ( 1 )
 	{
 		key = getch( );
-
-		// if ( key == '1' )	setTextColor( LIGHTYELLOW );
-		// else if ( key == '2' )	setTextColor( LIGHTBLUE  );
-		// else if ( key == '3' )	setTextColor( LIGHTGREEN );
-		// else if ( key == '4' )	setTextColor( LIGHTCYAN  );
-		// else if ( key == '5' )	setTextColor( LIGHTRED   );
-		// else if ( key == '6' )	setTextColor( LIGHTPURPLE);
-		// else if ( key == '7' )	setTextColor( LIGHTGRAY  );
-		// else if ( key == '8' )	setTextColor( LIGHTWHITE );
 
 		if ( key >= '1' && key <= '8' )
 		{
@@ -224,20 +223,6 @@ int GUI::play( )
 	int IDBrick, IDNextBrick; //So thu tu cua gach
 	score = 0;
 	system( "cls" );
-
-
-
-	// std::cout << "HINT";
-	// gotoxy( 4, 13 );
-	// // std::cout << "  Left  :  A";
-	// gotoxy( 4, 14 );
-	// std::cout << " Right  :  D";
-	// gotoxy( 4, 15 );
-	// std::cout << "Rotate  :  W";
-	// gotoxy( 4, 16 );
-	// std::cout << "  Drop  :  S";
-	// gotoxy( 4, 17 );
-	// std::cout << " Pause  :  P";
 	
 	//Tao 2 khoi gach dau tien
 	IDBrick = randIDBrick(); 
@@ -335,7 +320,10 @@ int GUI::play( )
 	   	}
 	   	t.setBrickNum( IDBrick + 7 );
 	   	t.getFullRows( );	//lay diem
+
 	   	score = score + level +  level * level * t.getScore() * t.getScore();
+
+	   	setTextColor ( COLOR ); 
 	   	gotoxy( 12, 4 );
 		std::cout << level;
 	   	gotoxy( 12, 6 );
@@ -343,6 +331,7 @@ int GUI::play( )
 
 	   	IDBrick = IDNextBrick; //Gan khoi cu thanh khoi moi
 		IDNextBrick = randIDBrick(); //Tao khoi gach tiep theo
+
 		tempTimeDelay = timeDelay *= 0.99;
 		level = ( 1000 - timeDelay ) / 100;
 	} while ( t.checkGameOver() == 0 );
@@ -353,8 +342,6 @@ int GUI::play( )
 
 void GUI::printBackground( )
 {
-
-
 	int i;
 	setTextColor( COLOR );
 	system( "cls" );
@@ -413,9 +400,9 @@ void GUI::printBackground( )
 void GUI::printCursor(int x1, int x2, int cursor)
 {
 	gotoxy( x1, cursor );
-	std::cout << "-->";
+	std::cout << (char) 175 << (char) 175 << (char) 175;
 	gotoxy( x2, cursor );
-	std::cout << "<--";
+	std::cout << (char) 174 << (char) 174 << (char) 174;
 	
 	//Xoa con tro cu di
 	gotoxy( x1, cursor+2 );
@@ -437,5 +424,3 @@ void GUI::delCursor(int x1, int x2, int cursor)
 	gotoxy( x2, cursor );
 	std::cout << "   ";
 }
-
-
