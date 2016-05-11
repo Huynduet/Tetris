@@ -34,9 +34,9 @@ void Table::show( ) const
 		gotoxy( 26, 22 - i );
 		for ( int j = 1; j <= 10; ++j )
 		{
-			if ( table[i][j] == 1 )
+			if ( table[i][j] > 0 )
 			{
-				setTextColor( LIGHTRED );
+				setTextColor(  ( table[i][j] >= 15 ) ? table[i][j] - 8 :  table[i][j] );
 				std::cout << chr << chr;
 			}
 			
@@ -53,46 +53,47 @@ void Table::show( ) const
 }
 
 
-void Table::create ( int style )
+void Table::create ( int ID )
 {
-	table[ pos[0][0] = 22 ][ pos[0][1] = 5] = 2;
-	table[ pos[1][0] = 21 ][ pos[1][1] = 5] = 2;
-	switch( style )
+	pos[0][0] = 22; pos[0][1] = 5;
+	pos[1][0] = 21; pos[1][1] = 5;
+	switch( ID )
 	{
 		case 0:			// khoi O
-		table[ pos[2][0] = 22 ][ pos[2][1] = 6] = 2;
-		table[ pos[3][0] = 21 ][ pos[3][1] = 6] = 2;
+		pos[2][0] = 22; pos[2][1] = 6;
+		pos[3][0] = 21; pos[3][1] = 6;
 		break;
 			case 1:			//khoi I
-			table[ pos[2][0] = 23 ][ pos[2][1] = 5] = 2;
-			table[ pos[3][0] = 24 ][ pos[3][1] = 5] = 2;
+			pos[2][0] = 23; pos[2][1] = 5;
+			pos[3][0] = 24; pos[3][1] = 5;
 			break;
 				case 2:			//khoi 	J
-				table[ pos[2][0] = 23 ][ pos[2][1] = 6] = 2;
-				table[ pos[3][0] = 23 ][ pos[3][1] = 5] = 2;
+				pos[2][0] = 23; pos[2][1] = 6;
+				pos[3][0] = 23; pos[3][1] = 5;
 				break;
 					case 3:			//khoi L
-					table[ pos[2][0] = 23 ][ pos[2][1] = 5] = 2;
-					table[ pos[3][0] = 21 ][ pos[3][1] = 6] = 2;
+					pos[2][0] = 23; pos[2][1] = 5;
+					pos[3][0] = 21; pos[3][1] = 6;
 					break;
 				case 4:			//khoi T
-				table[ pos[2][0] = 22 ][ pos[2][1] = 6] = 2;
-				table[ pos[3][0] = 23 ][ pos[3][1] = 5] = 2;
+				pos[2][0] = 22; pos[2][1] = 6;
+				pos[3][0] = 23; pos[3][1] = 5;
 				break;
 			case 5:			//khoi S
-			table[ pos[2][0] = 21 ][ pos[2][1] = 4] = 2;
-			table[ pos[3][0] = 22 ][ pos[3][1] = 6] = 2;
+			pos[2][0] = 21; pos[2][1] = 4;
+			pos[3][0] = 22; pos[3][1] = 6;
 			break;
 		case 6:			//khoi Z
-		table[ pos[2][0] = 21 ][ pos[2][1] = 6] = 2;
-		table[ pos[3][0] = 22 ][ pos[3][1] = 4] = 2;
+		pos[2][0] = 21; pos[2][1] = 6;
+		pos[3][0] = 22; pos[3][1] = 4;
 		break;
 	}
-
+	style = ID + 15;
+	setBrickNum( style );
 	tempScore = 0;
 }
 
-void Table::printNextBrick( int style )
+void Table::printNextBrick( int ID )
 {
 	int i, j, y;
 	//Khai bao mang[4][2] chua gach tiep theo
@@ -104,7 +105,7 @@ void Table::printNextBrick( int style )
 		for(j = 0; j < 2; j++)
 			posNext[i][j] = 0;
 	
-	switch( style )
+	switch( ID )
 	{
 		case 0:			// khoi O
 		posNext[2][0] = 1; posNext[1][0] = 1; 
@@ -183,17 +184,18 @@ bool Table::rotate ( )			//quay pi/2, neu la hinh vuong tra ve 0
 		pos[i][0] = pos[0][0] + deltaY;
 		pos[i][1] = pos[0][1] - deltaX;
 
-		if ( table[ pos[i][0] ][ pos[i][1] ] == 1 )		//kiem tra co gach bi vuong khi quay ko
+		if ( table[ pos[i][0] ][ pos[i][1] ] > 0
+			&& table[ pos[i][0] ][ pos[i][1] ] != style  )		//kiem tra co gach bi vuong khi quay ko
 		{
 			for ( int i = 0; i < 4; ++i )		// phuc hoi vi tri
 				pos[i][0] = oldPos[i][0] , pos[i][1] = oldPos[i][1];
 
-			setBrickNum( 2 );	//phuc hoi khoi gach
+			setBrickNum( style );	//phuc hoi khoi gach
 			return FALSE;
 		}
 	}
 
-	setBrickNum( 2 ); //phuc hoi khoi gach
+	setBrickNum( style ); //phuc hoi khoi gach
 	show( );	//ve lai
 	return TRUE;
 
@@ -201,31 +203,24 @@ bool Table::rotate ( )			//quay pi/2, neu la hinh vuong tra ve 0
 }
 void Table::moveLeft ( )
 {
-	if ( checkMoveLeft() )
+	if ( checkEmpty( 0, -1 ) )		//check left
 	{
 		setBrickNum ( 0 );	// xoa
 
-		table[ pos[0][0] ][ --pos[0][1] ] = 2;	//tai lap
-		table[ pos[1][0] ][ --pos[1][1] ] = 2;
-		table[ pos[2][0] ][ --pos[2][1] ] = 2;
-		table[ pos[3][0] ][ --pos[3][1] ] = 2;
-
-		show( );
+		for ( int i = 0; i < 4; ++i )
+			table[ pos[i][0] ][ --pos[i][1] ] = style;	//tai lap
+			show( );
 	}
 
 }
 
 void Table::moveRight ( )
 {
-	if ( checkMoveRight() )
+	if ( checkEmpty ( 0, +1 ) )
 	{
 		setBrickNum ( 0 );	// xoa
-
-		table[ pos[0][0] ][ ++pos[0][1] ] = 2;	//tai lap
-		table[ pos[1][0] ][ ++pos[1][1] ] = 2;
-		table[ pos[2][0] ][ ++pos[2][1] ] = 2;
-		table[ pos[3][0] ][ ++pos[3][1] ] = 2;
-
+		for ( int i = 0; i < 4; ++i )
+			table[ pos[i][0] ][ ++pos[i][1] ] = style;	//tai lap
 		show( );
 	}
 
@@ -233,79 +228,35 @@ void Table::moveRight ( )
 
 void Table::moveDown ( )
 {
-	if ( checkMoveDown() )
+	if ( checkEmpty( -1, 0 ) )
 	{
 		setBrickNum ( 0 );	// xoa
-
-		table[ --pos[0][0] ][ pos[0][1] ] = 2;	//tai lap
-		table[ --pos[1][0] ][ pos[1][1] ] = 2;
-		table[ --pos[2][0] ][ pos[2][1] ] = 2;
-		table[ --pos[3][0] ][ pos[3][1] ] = 2;
-
+		for ( int i = 0; i < 4; ++i )
+			table[ --pos[i][0] ][ pos[i][1] ] = style;	//tai lap
 		show( );
 	}
 }
 
-
-void Table::fall ( )
+bool Table::checkEmpty ( int x, int y ) const
 {
-	while ( checkMoveDown() )			//dich xuong neu co the
-	{
-		moveDown( );
-	}
-}
+	for ( int i = 0; i < 4; ++i )
+		if ( table[ pos[i][0] + x ][ pos[i][1] + y ] > 0
+			&& table[ pos[i][0] + x ][ pos[i][1] + y ] != style )
+			return FALSE;
 
-bool Table::checkMoveLeft ( ) const
-{
-	if ( table[ pos[0][0] ][ pos[0][1] - 1 ] == 1
-		 || table[ pos[1][0] ][ pos[1][1] - 1 ] == 1
-		 || table[ pos[2][0] ][ pos[2][1] - 1 ] == 1
-		 || table[ pos[3][0] ][ pos[3][1] - 1 ] == 1 )
-
-		return FALSE;
-	else
-		return TRUE;
-
-}
-
-bool Table::checkMoveRight ( ) const
-{
-	if ( table[ pos[0][0] ][ pos[0][1] + 1 ] == 1
-		 || table[ pos[1][0] ][ pos[1][1] + 1 ] == 1
-		 || table[ pos[2][0] ][ pos[2][1] + 1 ] == 1
-		 || table[ pos[3][0] ][ pos[3][1] + 1 ] == 1 )
-
-		return FALSE;
-	else
-		return TRUE;
-
-}
-
-bool Table::checkMoveDown ( )
-{
-	if ( table[ pos[0][0] - 1 ][ pos[0][1] ] == 1
-		 || table[ pos[1][0] - 1 ][ pos[1][1] ] == 1
-		 || table[ pos[2][0] - 1 ][ pos[2][1] ] == 1
-		 || table[ pos[3][0] - 1 ][ pos[3][1] ] == 1 )
-
-	{
-		setBrickNum ( 1 );	///bien thanh gach cu
-		return FALSE;
-	}
-	else
-		return TRUE;
-
+	return TRUE;
 }
 
 void Table::getFullRows ( )	//tra ve hang full gach va tang diem
 {
-	int sum;
+	bool ok;
 	for ( int i = 20; i > 0; -- i )
 	{
-		sum = 0;
+		ok = 1;
 		for ( int j = 1; j <= 10; ++j )
-			sum += table[i][j];
-		if ( sum == 10 )
+			if ( table[i][j] == 0 )
+				ok = 0;
+		if( ok )	
 			delRow( i );
 	}
 }

@@ -32,11 +32,8 @@ public:
 	void moveLeft ( );		//dich trai
 	void moveRight ( );		//dich phai
 	void moveDown ( );		//dich xuong
-	void fall ( );			//roi luon
 
-	bool checkMoveLeft ( ) const ;	//dich trai dc return TRUE
-	bool checkMoveRight ( )const ;//dich phai dc return TRUE
-	bool checkMoveDown ( );		//dich xuong dc return TRUE
+	bool checkEmpty ( int x, int y ) const;	// ktra o trong
 	void getFullRows ( );		//tra ve hang full gach va tang diem
 	bool checkGameOver ( ) const ;		//GameOver??
 

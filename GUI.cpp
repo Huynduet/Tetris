@@ -78,7 +78,7 @@ void GUI::start( )
 	gotoxy( 20, 11); std::cout << "                                                   ";
 	gotoxy( 20, 12); std::cout << "                YOUR SCORE : " << score << "             ";
 	gotoxy( 20, 13); std::cout << "                                                   ";
-
+	Sleep( 1500 );
 	getch( );
 }
 
@@ -177,8 +177,8 @@ void GUI::settingsLevel( )
 	}
 
 	if ( key == '1' ) level = 1;
-	else if ( key == '2' ) level = 2;
-	else if ( key == '3' ) level = 3;
+	else if ( key == '2' ) level = 4;
+	else if ( key == '3' ) level = 7;
 
 }
 void GUI::info( )		//thong tin game
@@ -219,7 +219,8 @@ int GUI::randIDBrick()
 int GUI::play( )
 {
 	Table t;	// choi tren Table nay
-	double timeDelay = 1000 - level * 300 ;	//thoi gian de roi
+	double timeDelay = 1000 - level * 100 ;	//thoi gian de roi
+	double tempTimeDelay = timeDelay;
 	int IDBrick, IDNextBrick; //So thu tu cua gach
 	score = 0;
 	system( "cls" );
@@ -242,18 +243,23 @@ int GUI::play( )
 	IDBrick = randIDBrick(); 
 	IDNextBrick = randIDBrick();
 	printBackground( );
-	while ( t.checkGameOver() == 0 )
+	gotoxy( 12, 4 );
+	std::cout << level;
+	gotoxy( 12, 6 );
+	std::cout <<  score;
+
+	do
 	{	
 		t.create( IDBrick );	//tao khoi moi
-		
-		while ( t.checkMoveDown( ) )
+
+		while ( t.checkEmpty( -1, 0 ) )
 		{
 			//In ra vien gach tiep theo
 
 			setTextColor( IDNextBrick + 7 );
 			t.printNextBrick( IDNextBrick );
 		
-			Sleep( ( timeDelay *= 0.995 ) );
+			Sleep( ( tempTimeDelay ) );
 			int count = 5;
 			while (--count  && kbhit() ) 				//doi phim an	
 	        {
@@ -266,7 +272,7 @@ int GUI::play( )
 	        	else if ( KEY == KEY_RIGHT ) 		// dich phai neu nhap D
 	        		t.moveRight( );
 	        	else if ( KEY == KEY_DOWN ) 		// roi luon neu nhap s
-	        		t.fall( );
+	        		tempTimeDelay /= 10;
 	        	else if ( KEY == KEY_UP ) 		// xoay
 	        		t.rotate( );
 	        	else if ( KEY == PAUSE || KEY == ESCAPE )		// tam dung pause
@@ -311,6 +317,8 @@ int GUI::play( )
 						if(cursor == 12) //tiep tuc
 						{
 							printBackground( );
+							gotoxy( 12, 4 );
+							std::cout << level;
 							gotoxy( 12, 6 );
 							std::cout <<  score;
 							break;
@@ -325,15 +333,19 @@ int GUI::play( )
 			t.moveDown( );		// dich xuong
 			
 	   	}
-
+	   	t.setBrickNum( IDBrick + 7 );
 	   	t.getFullRows( );	//lay diem
-	   	score = score + 1 +  level * 50 * t.getScore();
+	   	score = score + level +  level * level * t.getScore() * t.getScore();
+	   	gotoxy( 12, 4 );
+		std::cout << level;
 	   	gotoxy( 12, 6 );
 		std::cout <<  score;
 
 	   	IDBrick = IDNextBrick; //Gan khoi cu thanh khoi moi
 		IDNextBrick = randIDBrick(); //Tao khoi gach tiep theo
-	}
+		tempTimeDelay = timeDelay *= 0.99;
+		level = ( 1000 - timeDelay ) / 100;
+	} while ( t.checkGameOver() == 0 );
 
 	return score;	//lay diem 
 
@@ -350,7 +362,7 @@ void GUI::printBackground( )
 	gotoxy( 3, 2 );
 	std::cout << "~~~~~~~~~~~~~~~";
 	gotoxy( 3, 4 );
-	std::cout << " Level: " << level;
+	std::cout << " Level: ";
 	gotoxy( 3, 6 );
 	std::cout << " Score: ";
 	gotoxy( 3, 8 );
