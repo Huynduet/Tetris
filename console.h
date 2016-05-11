@@ -56,6 +56,7 @@ void setTextColor(WORD color)       //doi mau chu
 int restart()          //khoi dong lai chuong trinh, tra ve -1 khi thoat ctr vua goi,
 {
     char ownPth[MAX_PATH]; 
+    char absPth[MAX_PATH + 5];	//duong dan co " "
 
     // Will contain exe path
     HMODULE hModule = GetModuleHandle(NULL);
@@ -63,8 +64,12 @@ int restart()          //khoi dong lai chuong trinh, tra ve -1 khi thoat ctr vua
     {
      // When passing NULL to GetModuleHandle, it returns handle of exe itself
         GetModuleFileName(hModule,ownPth, (sizeof(ownPth))); 
-
-        system( ownPth );       //khoi dong lai 
+		
+		strncat ( absPth, "\"", 1 );
+		strncat ( absPth, ownPth, MAX_PATH );
+		strncat ( absPth, "\"", 1 );
+		
+        system( absPth );       //khoi dong lai 
         return -1 ;
     }
     else
