@@ -56,7 +56,7 @@ void setTextColor(WORD color)       //doi mau chu
 int restart()          //khoi dong lai chuong trinh, tra ve -1 khi thoat ctr vua goi,
 {
     char ownPth[MAX_PATH]; 
-    char absPth[MAX_PATH + 5];	//duong dan co " "
+    char absPth[MAX_PATH + 5] = "";	//duong dan co " "
 
     // Will contain exe path
     HMODULE hModule = GetModuleHandle(NULL);
