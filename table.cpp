@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <windows.h>
 #include <ctime>
+#include <fstream>
 
 #include "table.h"
 #include "console.h"

@@ -22,8 +22,9 @@ void GUI::mainMenu( )
 		gotoxy( 20, 10); std::cout << "                     MAIN MENU                     ";
 		gotoxy( 20, 13); std::cout << "                       START                       ";
 		gotoxy( 20, 15); std::cout << "                      SETTINGS                     ";
-		gotoxy( 20, 17); std::cout << "                       INFO                        ";
-		gotoxy( 20, 19); std::cout << "                       QUIT                        ";
+		gotoxy( 20, 17); std::cout << "                     HIGH SCORE                    ";
+		gotoxy( 20, 19); std::cout << "                       INFO                        ";
+		gotoxy( 20, 21); std::cout << "                       QUIT                        ";
 		
 		while( 1 )
 		{
@@ -33,7 +34,7 @@ void GUI::mainMenu( )
 			
 			if( KEY == KEY_DOWN ) //Di chuyen con tro xuong
 			{
-				if(cursor <= 17)
+				if(cursor <= 19)
 					cursor += 2;
 			}
 			else if( KEY == KEY_UP ) //Di chuyen con tro len
@@ -53,8 +54,10 @@ void GUI::mainMenu( )
 		else if(cursor == 15)
 			settings( );
 		else if(cursor == 17)
+			printHighScore( );
+		else if(cursor == 19)
 			info( );
-		else if(cursor == 19 || KEY == ESCAPE )
+		else if(cursor == 21 || KEY == ESCAPE )
 			quit( );	
 	}
 
@@ -76,9 +79,12 @@ void GUI::start( )
 	gotoxy( 20, 9 ); std::cout << "                                                   ";
 	gotoxy( 20, 10); std::cout << "_______________________GAME OVER___________________";
 	gotoxy( 20, 11); std::cout << "                                                   ";
-	gotoxy( 20, 12); std::cout << "                YOUR SCORE : " << score << "             ";
+	gotoxy( 20, 12); std::cout << "                   YOUR SCORE : " << score << "          ";
 	gotoxy( 20, 13); std::cout << "                                                   ";
-	Sleep( 1500 );
+	
+	//luu lai diem cao
+	setHighScore( score );
+
 	getch( );
 }
 
@@ -180,12 +186,122 @@ void GUI::settingsLevel( )
 	else if ( key == '3' ) level = 7;
 
 }
+
+void GUI::setHighScore(int score)
+{
+	char fileName[] = "HighScore.txt"; //Ten file chua high score
+	int i, h_score[10]; //10 diem cao nhat
+
+	//Kiem tra xem co dat high score khong???
+	std::ifstream highScore;
+	highScore.open(fileName);
+	for(i = 0; i < 10; i++)
+	{
+		highScore >> h_score[i];
+	}
+	highScore.close();
+
+	if(score < h_score[9])
+	{
+		gotoxy( 24, 14 );
+		std::cout << "     You can't make it to the Hall of Fame :(      ";
+		gotoxy( 24, 15 );
+		std::cout << "             Do better next time !                 ";
+		gotoxy( 24, 16 );
+		std::cout << "                                                   ";
+		return;
+	}
+
+	//Ghi ra file neu dat high score
+	std::ofstream outputHighScore;
+	outputHighScore.open(fileName);
+	for(i = 8; i >= 0; i--)
+	{
+		if(score > h_score[i])
+			h_score[i+1] = h_score[i];
+		else 
+			break;
+	}
+	h_score[i+1] = score;
+
+	//In ra thong bao thang 
+	if(i == -1)
+	{
+		gotoxy( 20, 14 );
+		std::cout << "CONGRATULATIONS. YOU HAVE ARCHIEVED THE HIGHEST SCORE !!!";
+	}
+	else 
+	{
+		gotoxy ( 20, 14 );
+		std::cout << "         Well done!!! You are now rank " << i+2 ;
+	}
+	gotoxy( 24, 15 );
+	std::cout << "                                                   ";
+
+	//Ghi ra file sau khi da them high score
+	for(i = 0; i < 10; i++)
+	{
+		outputHighScore << h_score[i] << std::endl;
+	}
+	outputHighScore.close();
+}
+
+void GUI::printHighScore( )
+{
+	char fileName[] = "HighScore.txt"; //Ten file chua high score
+	int i, score[10]; //10 diem cao nhat
+	std::ifstream highScore;
+	
+	highScore.open(fileName);
+	for(i = 0; i < 10; i++)
+	{
+		highScore >> score[i];
+	}
+	highScore.close();
+
+	printHeader( );
+	gotoxy( 20, 10 ); std::cout << "                     HIGH SCORE                    ";
+	for(i = 0; i < 10; i++)
+	{
+		if(i < 3)
+		{
+			if(i == 0)
+				setTextColor( LIGHTYELLOW );
+			if(i == 1)
+				setTextColor( LIGHTWHITE );
+			if(i == 2)
+				setTextColor( LIGHTRED );
+			gotoxy( 36, 13 + 2*i ); 
+			std::cout << i+1 << ".  " << score[i];
+		}
+		else if(i < 5)
+		{
+			setTextColor( COLOR );
+			gotoxy( 36, 13 + 2*i ); 
+			std::cout << i+1 << ".  " << score[i];
+		}
+		else if(i < 9)
+		{
+			gotoxy( 50, 13 + 2*(i-5) ); 
+			std::cout << i+1 << ".  " << score[i];
+		}
+		else 
+		{
+			gotoxy( 50, 13 + 2*(i-5) ); 
+			std::cout << i+1 << ". " << score[i];
+		}
+	}
+	
+	getch();
+}
+
 void GUI::info( )		//thong tin game
 {
 	printHeader( );
 
 	system("notepad README.txt");
 }
+
 void GUI::quit( )		//thoat game
 {
 	if ( confirm( "EXIT" ) )
@@ -337,7 +453,6 @@ int GUI::play( )
 	} while ( t.checkGameOver() == 0 );
 
 	return score;	//lay diem 
-
 }
 
 void GUI::printBackground( )
@@ -377,24 +492,7 @@ void GUI::printBackground( )
 	for ( int j = 0; j < 22; ++j )
 	{
 		std::cout << (char)223;
-	}
-
-
-	//in bien gach tiep
-	// gotoxy( 56, 4 );
-	// for ( i = 0; i < 12; i++ )
-	// 	std::cout << (char)220;
-	// for ( i = 5 ; i < 10; i++ )
-	// {
-	// 	gotoxy( 56, i );
-	// 	std::cout << (char)221;	//bien
-	// 	gotoxy( 67, i );
-	// 	std::cout << (char)222;	//bien
-	// }
-	// gotoxy( 56, 9 );
-	// for ( i = 0; i < 12; i++ )
-	// 	std::cout << (char)223;
-	
+	}	
 }
 
 void GUI::printCursor(int x1, int x2, int cursor)

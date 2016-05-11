@@ -16,6 +16,7 @@ public:
 	void mainMenu( );	//man hinh khoi dong
 	void start (  );		//bat dau choi, lay diem tu play( )
 	void settings( );	//cai dat
+	void printHighScore( ); //hien thi thong tin high score
 	void info( );		//thong tin game
 	void quit( );		//thoat game
 
@@ -25,6 +26,7 @@ public:
 
 	void settingsColor( );	//thay mau trong settings f c
 	void settingsLevel( );	//thay va tra ve do kho 1 - easy, 2 - normal, 3 - hard
+	void setHighScore(int score); //Luu diem cao vao file
 
 	void printBackground( ); //nen game
 	int  randIDBrick(); //tao so ngau nhien
