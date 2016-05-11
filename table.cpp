@@ -26,9 +26,6 @@ Table::Table(  )		//khoi tao bang
 
 void Table::show( ) const
 {
-	char chr = 219;
-
-	
 	for ( int i = 20 ; i >= 1; i-- )
 	{
 		gotoxy( 26, 22 - i );
@@ -37,15 +34,8 @@ void Table::show( ) const
 			if ( table[i][j] > 0 )
 			{
 				setTextColor(  ( table[i][j] >= 15 ) ? table[i][j] - 8 :  table[i][j] );
-				std::cout << chr << chr;
+				std::cout << (char)219 << (char)219;
 			}
-			/*
-			else if ( table[i][j] == 2 )
-			{
-				setTextColor( LIGHTGREEN );
-				std::cout << chr << chr;
-			}*/
-				
 			else
 				std::cout << "  ";
 		}
