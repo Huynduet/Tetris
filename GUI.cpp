@@ -45,11 +45,13 @@ void GUI::mainMenu( )
 
 			printCursor(28, 60, cursor);
 			
-			if( KEY == ENTER )
+			if( KEY == ENTER || KEY == ESCAPE )
 				break;
 		}
 		
-		if(cursor == 13)
+		if(cursor == 21 || KEY == ESCAPE )
+			quit( );
+		else if(cursor == 13)
 			start( );
 		else if(cursor == 15)
 			settings( );
@@ -57,8 +59,7 @@ void GUI::mainMenu( )
 			printHighScore( );
 		else if(cursor == 19)
 			info( );
-		else if(cursor == 21 || KEY == ESCAPE )
-			quit( );	
+		
 	}
 
 }
@@ -84,8 +85,10 @@ void GUI::start( )
 	
 	//luu lai diem cao
 	setHighScore( score );
-
-	getch( );
+	
+	Sleep(1500);
+	
+	getch();
 }
 
 void GUI::settings( )
@@ -270,7 +273,7 @@ void GUI::printHighScore( )
 			if(i == 1)
 				setTextColor( LIGHTWHITE );
 			if(i == 2)
-				setTextColor( LIGHTRED );
+				setTextColor( GRAY );
 			gotoxy( 36, 13 + 2*i ); 
 			std::cout << i+1 << ".  " << score[i];
 		}
@@ -411,11 +414,11 @@ int GUI::play( )
 				
 							printCursor(20, 50, cursor);
 							
-							if( KEY == ENTER )
+							if( KEY == ENTER || KEY == ESCAPE )
 								break;
 						}
 						
-						if(cursor == 12) //tiep tuc
+						if(cursor == 12 || KEY == ESCAPE ) //tiep tuc
 						{
 							printBackground( );
 							gotoxy( 12, 4 );

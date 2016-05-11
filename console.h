@@ -68,7 +68,8 @@ int restart()          //khoi dong lai chuong trinh, tra ve -1 khi thoat ctr vua
 		strncat ( absPth, "\"", 1 );
 		strncat ( absPth, ownPth, MAX_PATH );
 		strncat ( absPth, "\"", 1 );
-		
+//		std::cout << absPth;
+//		getch();
         system( absPth );       //khoi dong lai 
         return -1 ;
     }
@@ -143,7 +144,7 @@ bool confirm( char const action[] )     //xac nhan lua chon
         key = getch( );     //doc phim
         if ( key == 'Y' || key == 'y' || key == 13 )
             return TRUE;
-        else if ( key == 'N' || key == 'n' )
+        else if ( key == 'N' || key == 'n' || ESCAPE == key_press() )
             return FALSE;
     }
 }
