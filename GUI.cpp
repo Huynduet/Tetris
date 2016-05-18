@@ -2,22 +2,19 @@
 #include "table.cpp"
 #include "console.h"
 #include "GUI.h"
-
-
-
+#include <sstream>
 
 void GUI::mainMenu( )
 {
-	srand(time(NULL));
-	cursor = 13; //Toa do dau tien cua con tro
-	level = 1;
+	cursorY = 13; //Toa do dau tien cua con tro
+	level = 1; //Level ban dau
 	exit = FALSE;
-	COLOR = LIGHTGREEN;
+	COLOR = LIGHTGREEN; //Mau mac dinh cua game
 
 	while ( !exit )		 		//chay den khi co lenh thoat
 	{
 		setTextColor( COLOR );
-		printHeader( );		//in ra 
+		printHeader( );	
 		
 		gotoxy( 20, 10); std::cout << "                     MAIN MENU                     ";
 		gotoxy( 20, 13); std::cout << "                       START                       ";
@@ -28,40 +25,51 @@ void GUI::mainMenu( )
 		
 		while( 1 )
 		{
-			printCursor(28, 60, cursor);
+			printCursor(28, 60, cursorY); //In ra con tro tuy chon
 			
 			KEY = key_press( );
 			
 			if( KEY == KEY_DOWN ) //Di chuyen con tro xuong
 			{
-				if(cursor <= 19)
-					cursor += 2;
+				//Thay doi toa do con tro tuy chon
+				if(cursorY <= 19)
+					cursorY += 2; 
+				else if(cursorY == 21)
+				{
+					delCursor(28, 60, cursorY);
+					cursorY = 13;
+				}
 			}
 			else if( KEY == KEY_UP ) //Di chuyen con tro len
 			{
-				if(cursor >= 15)
-					cursor -= 2;
+				//Thay doi toa do con tro tuy chon
+				if(cursorY >= 15)
+					cursorY -= 2;
+				else if(cursorY == 13)
+					{
+					delCursor(28, 60, cursorY);
+					cursorY = 21;
+				}
 			}
 
-			printCursor(28, 60, cursor);
+			printCursor(28, 60, cursorY); //In ra con tro tuy chon
 			
 			if( KEY == ENTER || KEY == ESCAPE )
 				break;
 		}
 		
-		if(cursor == 21 || KEY == ESCAPE )
+		//Thuc hien lenh tuy theo toa do con tro tuy chon
+		if(cursorY == 21 || KEY == ESCAPE )
 			quit( );
-		else if(cursor == 13)
+		else if(cursorY == 13)
 			start( );
-		else if(cursor == 15)
+		else if(cursorY == 15)
 			settings( );
-		else if(cursor == 17)
+		else if(cursorY == 17)
 			printHighScore( );
-		else if(cursor == 19)
+		else if(cursorY == 19)
 			info( );
-		
 	}
-
 }
 
 void GUI::start( )
@@ -93,11 +101,11 @@ void GUI::start( )
 
 void GUI::settings( )
 {
-	cursor = 13;
+	cursorY = 13;
 
 	while ( TRUE )
 	{
-		printHeader( );
+		printHeader( ); 
 
 		gotoxy( 20, 10); std::cout << "                      SETTINGS                     ";
 		gotoxy( 20, 13); std::cout << "                       COLOR                       ";
@@ -106,37 +114,47 @@ void GUI::settings( )
 		
 		while( TRUE )
 		{
-			printCursor(28, 60, cursor);
+			printCursor(28, 60, cursorY); //In ra con tro tuy chon
 			
 			KEY = key_press( );
 			
 			if( KEY == KEY_DOWN ) //Di chuyen con tro xuong
 			{
-				if(cursor <= 15)
-					cursor += 2;
+				//Thay doi toa do con tro tuy chon
+				if(cursorY <= 15)
+					cursorY += 2;
+				else if(cursorY == 17)
+				{
+					delCursor(28, 60, cursorY);
+					cursorY = 13;
+				}
 			}
 			else if( KEY == KEY_UP ) //Di chuyen con tro len
 			{
-				if(cursor >= 15)
-					cursor -= 2;
+				//Thay doi toa do con tro tuy chon
+				if(cursorY >= 15)
+					cursorY -= 2;
+				else if(cursorY == 13)
+				{
+					delCursor(28, 60, cursorY);
+					cursorY = 17;
+				}
 			}
 
-			printCursor(28, 60, cursor);
+			printCursor(28, 60, cursorY);
 			
 			if( KEY == ENTER )
 				break;
 		}
 		
-		if(cursor == 13)
-		{
-			delCursor ( 28, 60, cursor);
+		//Thuc hien lenh tuy theo toa do con tro tuy chon
+		if(cursorY == 13)
 			settingsColor( );
-		}
-		else if(cursor == 15)
+		else if(cursorY == 15)
 			settingsLevel( );
-		else if(cursor == 17)
+		else if(cursorY == 17)
 		{
-			cursor = 13;
+			cursorY = 13;
 			return;
 		}
 	}
@@ -184,6 +202,7 @@ void GUI::settingsLevel( )
 		key = getch( );
 	}
 
+	//tao level cua game
 	if ( key == '1' ) level = 1;
 	else if ( key == '2' ) level = 4;
 	else if ( key == '3' ) level = 7;
@@ -198,12 +217,15 @@ void GUI::setHighScore(int score)
 	//Kiem tra xem co dat high score khong???
 	std::ifstream highScore;
 	highScore.open(fileName);
+
+	//Nhap 10 diem cao nhat tu file
 	for(i = 0; i < 10; i++)
 	{
 		highScore >> h_score[i];
 	}
 	highScore.close();
 
+	//Tra ve neu khong dat high score
 	if(score < h_score[9])
 	{
 		gotoxy( 24, 14 );
@@ -227,7 +249,7 @@ void GUI::setHighScore(int score)
 	}
 	h_score[i+1] = score;
 
-	//In ra thong bao thang 
+	//In ra thong bao thang va vi tri tren bang high score 
 	if(i == -1)
 	{
 		gotoxy( 20, 14 );
@@ -236,7 +258,7 @@ void GUI::setHighScore(int score)
 	else 
 	{
 		gotoxy ( 20, 14 );
-		std::cout << "         Well done!!! You are now rank " << i+2 ;
+		std::cout << "         Well done!!! You are now rank " << i+2 << "         " ;
 	}
 	gotoxy( 24, 15 );
 	std::cout << "                                                   ";
@@ -255,6 +277,7 @@ void GUI::printHighScore( )
 	int i, score[10]; //10 diem cao nhat
 	std::ifstream highScore;
 	
+	//Lay diem da luu tu file highScore
 	highScore.open(fileName);
 	for(i = 0; i < 10; i++)
 	{
@@ -262,6 +285,7 @@ void GUI::printHighScore( )
 	}
 	highScore.close();
 
+	//In ra 10 diem cao nhat
 	printHeader( );
 	gotoxy( 20, 10 ); std::cout << "                     HIGH SCORE                    ";
 	for(i = 0; i < 10; i++)
@@ -274,13 +298,13 @@ void GUI::printHighScore( )
 				setTextColor( LIGHTWHITE );
 			if(i == 2)
 				setTextColor( GRAY );
-			gotoxy( 36, 13 + 2*i ); 
+			gotoxy( 35, 13 + 2*i ); 
 			std::cout << i+1 << ".  " << score[i];
 		}
 		else if(i < 5)
 		{
-			setTextColor( COLOR );
-			gotoxy( 36, 13 + 2*i ); 
+			setTextColor( LIGHTGRAY );
+			gotoxy( 35, 13 + 2*i ); 
 			std::cout << i+1 << ".  " << score[i];
 		}
 		else if(i < 9)
@@ -298,22 +322,31 @@ void GUI::printHighScore( )
 	getch();
 }
 
-void GUI::info( )		//thong tin game
+void GUI::info( )		//In ra thong tin game
 {
 	printHeader( );
 
-	system("notepad README.txt");
+	std::ifstream readme("README.txt");
+	std::string line, info;
+
+	while (readme)
+	{
+		getline(readme, line);
+		info += "\t\t\t" + line + "\n";
+	}
+
+	gotoxy(5, 10);
+	std::cout << info;
+	getch();
 }
 
 void GUI::quit( )		//thoat game
 {
 	if ( confirm( "EXIT" ) )
-		exit = TRUE;		//thoat game
+		exit = TRUE;		//thoat game neu confirm = true
 	else 
 		exit = FALSE;
 }
-
-
 
 void GUI::printHeader( )
 {
@@ -328,29 +361,36 @@ void GUI::printHeader( )
 	gotoxy( 20, 6 ); std::cout << "/__/   /_______/    /__/   /__/  /__//__/ /_________/";
 }
 
-int GUI::randIDBrick()
-{
-	
-	return rand() % 7 ;
+int randIDBrick() //Tao so ngau nhien la thu tu cua cac loai gach tu 0 - 6
+{	
+	return rand() % 7;
 }
 
 int GUI::play( )
 {
 	Table t;	// choi tren Table nay
+	srand(time(NULL)); //Sinh so ngau nhien
+
 	double timeDelay = 1000 - level * 100 ;	//thoi gian de roi
 	double tempTimeDelay = timeDelay;
 	int IDBrick, IDNextBrick; //So thu tu cua gach
-	score = 0;
+	score = 0; //Diem ban dau
+	lines = 0; //So hang da an duoc ban dau
+	
 	system( "cls" );
 	
 	//Tao 2 khoi gach dau tien
 	IDBrick = randIDBrick(); 
 	IDNextBrick = randIDBrick();
+	
+	//In ra background, level, line va score ban dau
 	printBackground( );
 	gotoxy( 12, 4 );
 	std::cout << level;
 	gotoxy( 12, 6 );
 	std::cout <<  score;
+	gotoxy( 12, 8 );
+	std::cout << lines;
 
 	do
 	{	
@@ -358,32 +398,30 @@ int GUI::play( )
 
 		while ( t.checkEmpty( -1, 0 ) )
 		{
-			//In ra vien gach tiep theo
-
+			//In ra vien gach tiep theo va mau cua no
 			setTextColor( IDNextBrick + 7 );
 			t.printNextBrick( IDNextBrick );
 		
 			Sleep( ( tempTimeDelay ) );
-			int count = 5;
+			int count = 5; //So lan xoay toi da trong timeDelay
+
 			while (--count  && kbhit() ) 				//doi phim an	
 	        {
 	        	KEY = key_press( );
-	        	if ( KEY == KEY_LEFT ) 			// dich trai neu nhap A
-	        		{
-						t.moveLeft( );
-						//continue;
-					}
-	        	else if ( KEY == KEY_RIGHT ) 		// dich phai neu nhap D
+	        	if ( KEY == KEY_LEFT ) 			// dich trai neu nhap phim trai
+	        		t.moveLeft( );
+	        	else if ( KEY == KEY_RIGHT ) 		// dich phai neu nhap phim phai
 	        		t.moveRight( );
-	        	else if ( KEY == KEY_DOWN ) 		// roi luon neu nhap s
+	        	else if ( KEY == KEY_DOWN ) 		// roi luon neu nhap phim xuong
 	        		tempTimeDelay /= 10;
-	        	else if ( KEY == KEY_UP ) 		// xoay
+	        	else if ( KEY == KEY_UP ) 		// xoay neu nhap phim len
 	        		t.rotate( );
 	        	else if ( KEY == PAUSE || KEY == ESCAPE )		// tam dung pause
 	        		while ( 1 ) //man hinh pause 
 	        		{
 	        			system( "cls" );	//xoa man hinh, chong gian lan
 
+	        			//In ra tuy chon o man hinh pause
     					setTextColor( COLOR );
 	        			gotoxy( 35, 9 );
 	        			std::cout << "PAUSE";
@@ -394,42 +432,58 @@ int GUI::play( )
 	        			gotoxy( 30, 16 );
 	        			std::cout << "  MAIN MENU";
 	
-	        			int cursor = 12; // Toa do dau tien cua con tro
+	        			cursorY = 12; // Toa do dau tien cua con tro
 						while( 1 )
 						{
-							printCursor(20, 50, cursor);
+							printCursor(20, 50, cursorY);
 							
 							KEY = key_press( );
 							
 							if( KEY == KEY_DOWN ) //Di chuyen con tro xuong
 							{
-								if(cursor <= 14)
-									cursor += 2;
+								//Thay doi toa do con tro tuy chon
+								if(cursorY <= 14)
+									cursorY += 2;
+								else if(cursorY == 16)
+								{
+									delCursor(20, 50, cursorY);
+									cursorY = 12;
+								}
 							}
 							else if( KEY == KEY_UP ) //Di chuyen con tro len
 							{
-								if(cursor >= 14)
-									cursor -= 2;
+								//Thay doi toa do con tro tuy chon
+								if(cursorY >= 14)
+									cursorY -= 2;
+								else if(cursorY == 12)
+								{
+									delCursor(20, 50, cursorY);
+									cursorY = 16;
+								}
 							}
 				
-							printCursor(20, 50, cursor);
+							printCursor(20, 50, cursorY);
 							
 							if( KEY == ENTER || KEY == ESCAPE )
 								break;
 						}
 						
-						if(cursor == 12 || KEY == ESCAPE ) //tiep tuc
+						//Thuc hien lenh tuy theo toa do con tro tuy chon
+						if(cursorY == 12 || KEY == ESCAPE ) //tiep tuc
 						{
+							//In ra nen game, level, lines va score hien tai va tiep tuc game
 							printBackground( );
 							gotoxy( 12, 4 );
 							std::cout << level;
 							gotoxy( 12, 6 );
-							std::cout <<  score;
+							std::cout << score;
+							gotoxy( 12, 8 );
+							std::cout << lines;
 							break;
 						}
-						else if(cursor == 14 && confirm("RESTART") ) //choi lai ( can  xac nhan )
+						else if(cursorY == 14 && confirm("RESTART") ) //choi lai ( can  xac nhan )
 							return play( );
-						else if(cursor == 16 && confirm("BACK TO MAIN MENU") ) //quay ve
+						else if(cursorY == 16 && confirm("BACK TO MAIN MENU") ) //quay ve
 							return restart( );
         		}	        		
 	    	}
@@ -438,15 +492,20 @@ int GUI::play( )
 			
 	   	}
 	   	t.setBrickNum( IDBrick + 7 );
-	   	t.getFullRows( );	//lay diem
+	   	t.getFullRows( );	//Lay diem
 
+	   	//Tinh diem hien tai
 	   	score = score + level +  level * level * t.getScore() * t.getScore();
+	   	lines += t.getScore();
 
+	   	//In ra level, lines va score hien tai
 	   	setTextColor ( COLOR ); 
 	   	gotoxy( 12, 4 );
 		std::cout << level;
 	   	gotoxy( 12, 6 );
-		std::cout <<  score;
+		std::cout << score;
+		gotoxy( 12, 8 );
+		std::cout << lines;
 
 	   	IDBrick = IDNextBrick; //Gan khoi cu thanh khoi moi
 		IDNextBrick = randIDBrick(); //Tao khoi gach tiep theo
@@ -455,6 +514,7 @@ int GUI::play( )
 		level = ( 1000 - timeDelay ) / 100;
 	} while ( t.checkGameOver() == 0 );
 
+	cursorY = 13; //Dat lai ve toa do ban dau
 	return score;	//lay diem 
 }
 
@@ -465,13 +525,17 @@ void GUI::printBackground( )
 	system( "cls" );
 
 	gotoxy( 3, 2 );
-	std::cout << "~~~~~~~~~~~~~~~";
+	for ( int j = 0; j < 16; ++j )
+		std::cout << (char)205;
 	gotoxy( 3, 4 );
-	std::cout << " Level: ";
+	std::cout << " Level : ";
 	gotoxy( 3, 6 );
-	std::cout << " Score: ";
+	std::cout << " Score : ";
 	gotoxy( 3, 8 );
-	std::cout << "~~~~~~~~~~~~~~~";
+	std::cout << " Lines : ";
+	gotoxy( 3, 10 );
+	for ( int j = 0; j < 16; ++j )
+		std::cout << (char)205;
 
 	gotoxy(58, 2);
 	std::cout << "NEXT";
@@ -479,49 +543,44 @@ void GUI::printBackground( )
 	//in vien table
 	gotoxy( 25, 1 );
 	for ( int j = 0; j < 22; ++j )
-	{
 		std::cout << (char)220;
-	}
 		
 	for ( int i = 20 ; i >= 1; i-- )
 	{
 		gotoxy( 25, 22 - i );
-		std::cout << (char)221;	//bien
+		std::cout << (char)221;	
 		gotoxy( 46, 22 - i );
 		std::cout << (char)222;
 	}
 
 	gotoxy( 25, 22 ); 
 	for ( int j = 0; j < 22; ++j )
-	{
-		std::cout << (char)223;
-	}	
+		std::cout << (char)223;	
 }
 
-void GUI::printCursor(int x1, int x2, int cursor)
+void GUI::printCursor(int x1, int x2, int cursorY)
 {
-	gotoxy( x1, cursor );
+	gotoxy( x1, cursorY );
 	std::cout << (char) 175 << (char) 175 << (char) 175;
-	gotoxy( x2, cursor );
+	gotoxy( x2, cursorY );
 	std::cout << (char) 174 << (char) 174 << (char) 174;
-	
-	//Xoa con tro cu di
-	gotoxy( x1, cursor+2 );
+
+	//Xoa con tro tuy chon o vi tri cu
+	gotoxy( x1, cursorY+2 );
 	std::cout << "   ";
-	gotoxy( x2, cursor+2 );
+	gotoxy( x2, cursorY+2 );
 	std::cout << "   ";
 
-	gotoxy( x1, cursor-2 );
+	gotoxy( x1, cursorY-2 );
 	std::cout << "   ";
-	gotoxy( x2, cursor-2 );
+	gotoxy( x2, cursorY-2 );
 	std::cout << "   ";
 }
 
-//Xoa con tro vua hien len man hinh
-void GUI::delCursor(int x1, int x2, int cursor)
+void GUI::delCursor(int x1, int x2, int cursorY)
 {
-	gotoxy( x1, cursor );
+	gotoxy( x1, cursorY );
 	std::cout << "   ";
-	gotoxy( x2, cursor );
+	gotoxy( x2, cursorY );
 	std::cout << "   ";
 }

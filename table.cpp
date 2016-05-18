@@ -20,7 +20,6 @@ Table::Table(  )		//khoi tao bang
 
 	for ( int i = 0; i < 12; ++i )		//bien ngang
 		table[0][i] = 1;
-	srand ( time(NULL) );	//sinh so ngau nhien
 }
 
 
@@ -86,12 +85,9 @@ void Table::create ( int ID )
 
 void Table::printNextBrick( int ID )
 {
-	int i, j, y;
-	//Khai bao mang[4][2] chua gach tiep theo
-	int **posNext = new int*[4];
-	for(i = 0; i < 4; i++)
-		posNext[i] = new int[2];
-	
+	int i, j;
+
+	//Gan gia tri khoi gach theo ID
 	for(i = 0; i < 4; i++)
 		for(j = 0; j < 2; j++)
 			posNext[i][j] = -1;
@@ -127,11 +123,12 @@ void Table::printNextBrick( int ID )
 		posNext[1][1] = ID; posNext[2][1] = ID;
 		break;
 	}
-	//In ra vien gach tiep theo 
-	y = 6; //Tung do
+
+	//In ra vien gach tiep theo vua tao
+	int cursorY = 6; //Tung do
 	for(j = 0; j < 2; j++)
 	{
-		gotoxy(58, y);
+		gotoxy(58, cursorY);
 		for(i = 0; i < 4; i++)
 		{
 			if( posNext[i][j] >= 0 )
@@ -142,12 +139,8 @@ void Table::printNextBrick( int ID )
 			else 
 				std:: cout << "  ";
 		}
-		y++;
+		cursorY++;
 	}
-	//Giai phong bo nho
-	for(i = 0; i < 4; i++)
-		delete []posNext[i];
-	delete []posNext;
 }
 
 void Table::setBrickNum ( int number )

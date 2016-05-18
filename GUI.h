@@ -5,12 +5,13 @@
 class GUI
 {
 private:
-	int  level;
-	int  score;
-	WORD COLOR;
+	int  level; //Level cua game
+	int  score; //Diem cua nguoi choi
+	int  lines; //So hang da an duoc
+	WORD COLOR; 
 	bool exit;
-	WORD KEY;
-	int  cursor;
+	WORD KEY; //Phim vua nhap
+	int  cursorY; //Toa do con tro tuy chon
 public:
 
 	void mainMenu( );	//man hinh khoi dong
@@ -29,10 +30,9 @@ public:
 	void setHighScore(int score); //Luu diem cao vao file
 
 	void printBackground( ); //nen game
-	int  randIDBrick(); //tao so ngau nhien
 	
-	void printCursor(int x1, int x2, int y); //In tuy chon, x1, x2, y la toa do 
-	void delCursor(int x1, int x2, int y); //Xoa tuy chon cu
+	void printCursor(int x1, int x2, int y); //In con tro tuy chon, x1, x2, y la toa do 
+	void delCursor(int x1, int x2, int y); //Xoa con tro tuy chon cu
 
 
 };

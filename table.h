@@ -11,20 +11,21 @@
 class Table
 {
 private:
-	int table [25][12];	 //bang chua vi tri vien gach	hang 0 chua cac so 1, cot 0 , 11 la bien
-	int style;				//kieu vien gach ( O I J L T S Z)
+	int  table [25][12];	 //bang chua vi tri vien gach	hang 0 chua cac so 1, cot 0 , 11 la bien
+	int  style;				//kieu vien gach ( O I J L T S Z)
 
-	int pos[4][2];	// chua vi tri vien gach con, [][0] = X , [][1] = Y , [0][] la vien ko thay vi tri khi xoay
-	int fullRows[4];
-	int tempScore;
+	int  pos[4][2];	// chua vi tri vien gach con, [][0] = X , [][1] = Y , [0][] la vien ko thay vi tri khi xoay
+	int  posNext[4][2]; //Chua vien gach tiep theo hien len man hinh
+	int  fullRows[4];
+	int  tempScore;
 	WORD COLOR;
 
 public:
 	Table( );		//tao bang toan 0 tru hang 0
 	void show ( ) const ;			//ve bang
 
-	void create ( int style );
-	void printNextBrick ( int style );
+	void create ( int ID ); // Tao vien gach theo ID
+	void printNextBrick ( int ID ); //In ra vien gach xuat hien tiep theo theo ID
 	void setBrickNum ( int number );	//chuyen so o cac vien gach dang roi ve number
 	bool rotate ( );			//quay pi/2, neu la hinh vuong tra ve 0
 	void moveLeft ( );		//dich trai
@@ -37,7 +38,7 @@ public:
 
 	void delRow ( int row );	//xoa hang fullRows (xoa den dau ve lai den do)
 
-	int getScore ( ) const ;
+	int  getScore ( ) const ; //Tra ve diem cua game
 
 };
 

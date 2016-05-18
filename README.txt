@@ -1,14 +1,18 @@
-TETRIS
+-----------------------------------------------
 
-//-----------------------------------------------//
+	HOW TO PLAY 
 
-HOW TO PLAY 
+	- USE 
 
-- USE 
+	   W        OR       /\       TO PLAY
+	A  S  D           <  \/  >
 
-   W        OR       /\       TO PLAY
-A  S  D           <  \/  >
+	- PAUSE : ESC | P
 
-- PAUSE : ESC
+-----------------------------------------------
 
-//-----------------------------------------------//
+	Developed by: 
+		Nguyen Duc Huy
+		Nguyen Viet Hoang
+		
+		
