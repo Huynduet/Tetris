@@ -6,7 +6,7 @@
 
 void GUI::mainMenu( )
 {
-	cursorY = 13; //Toa do dau tien cua con tro
+	
 	level = 1; //Level ban dau
 	exit = FALSE;
 	COLOR = LIGHTGREEN; //Mau mac dinh cua game
@@ -15,7 +15,8 @@ void GUI::mainMenu( )
 	{
 		setTextColor( COLOR );
 		printHeader( );	
-		
+
+		cursorY = 13; //Toa do dau tien cua con tro
 		gotoxy( 20, 10); std::cout << "                     MAIN MENU                     ";
 		gotoxy( 20, 13); std::cout << "                       START                       ";
 		gotoxy( 20, 15); std::cout << "                      SETTINGS                     ";
@@ -420,8 +421,8 @@ int GUI::play( )
 
 	        			//In ra tuy chon o man hinh pause
     					setTextColor( COLOR );
-	        			gotoxy( 35, 9 );
-	        			std::cout << "PAUSE";
+	        			gotoxy( 30, 9 );
+	        			std::cout << "_____PAUSE_____";
 	        			gotoxy( 30, 12 );
 	        			std::cout << "   RESUME";
 	        			gotoxy( 30, 14 );
