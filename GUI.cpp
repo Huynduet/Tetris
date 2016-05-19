@@ -61,13 +61,13 @@ void GUI::mainMenu( )
 		//Thuc hien lenh tuy theo toa do con tro tuy chon
 		if(cursorY == 21 || KEY == ESCAPE )
 			quit( );
-		else if(cursorY == 13)
+		else if ( cursorY == 13 )
 			start( );
-		else if(cursorY == 15)
+		else if ( cursorY == 15 ) 
 			settings( );
-		else if(cursorY == 17)
+		else if ( cursorY == 17 )
 			printHighScore( );
-		else if(cursorY == 19)
+		else if ( cursorY == 19 )
 			info( );
 	}
 }
@@ -76,27 +76,24 @@ void GUI::start( )
 {
 	std::cout <<"Don't delete this line";
 
-	score = play( );	
-	if ( score == -1 )
-	{
-		exit = TRUE;
-		return;
-	}
+	score = play( );
 
-	//gameOver == TRUE
-	setTextColor( COLOR );
-	gotoxy( 20, 9 ); std::cout << "                                                   ";
-	gotoxy( 20, 10); std::cout << "_______________________GAME OVER___________________";
-	gotoxy( 20, 11); std::cout << "                                                   ";
-	gotoxy( 20, 12); std::cout << "                   YOUR SCORE : " << score << "          ";
-	gotoxy( 20, 13); std::cout << "                                                   ";
+	if ( score > -1 )
+	{
+		setTextColor( COLOR );
+		gotoxy( 20, 9 ); std::cout << "                                                   ";
+		gotoxy( 20, 10); std::cout << "_______________________GAME OVER___________________";
+		gotoxy( 20, 11); std::cout << "                                                   ";
+		gotoxy( 20, 12); std::cout << "                   YOUR SCORE : " << score << "          ";
+		gotoxy( 20, 13); std::cout << "                                                   ";
+		
+		//luu lai diem cao
+		setHighScore( score );	
 	
-	//luu lai diem cao
-	setHighScore( score );
-	
-	Sleep(1500);
-	
-	getch();
+		Sleep(1500);
+		
+		getch();
+	}
 }
 
 void GUI::settings( )
@@ -484,7 +481,8 @@ int GUI::play( )
 						else if(cursorY == 14 && confirm("RESTART") ) //choi lai ( can  xac nhan )
 							return play( );
 						else if(cursorY == 16 && confirm("BACK TO MAIN MENU") ) //quay ve
-							return restart( );
+							return -1;
+							//return restart( );
         		}	        		
 	    	}
 	    

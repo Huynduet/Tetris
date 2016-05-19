@@ -144,7 +144,7 @@ bool confirm( char const action[] )     //xac nhan lua chon
         key = getch( );     //doc phim
         if ( key == 'Y' || key == 'y' || key == 13 )
             return TRUE;
-        else if ( key == 'N' || key == 'n' || ESCAPE == key_press() )
+        else if ( key == 'N' || key == 'n' || key == 27 )
             return FALSE;
     }
 }
