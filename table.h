@@ -17,7 +17,7 @@ private:
 	int  pos[4][2];	// chua vi tri vien gach con, [][0] = X , [][1] = Y , [0][] la vien ko thay vi tri khi xoay
 	int  posNext[4][2]; //Chua vien gach tiep theo hien len man hinh
 	int  fullRows[4];
-	int  tempScore;
+	int  deletedLines;
 	WORD COLOR;
 
 public:
@@ -38,7 +38,7 @@ public:
 
 	void delRow ( int row );	//xoa hang fullRows (xoa den dau ve lai den do)
 
-	int  getScore ( ) const ; //Tra ve diem cua game
+	int  getDeletedLines ( ) const ; //Tra ve diem cua game
 
 };
 

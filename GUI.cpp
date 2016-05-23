@@ -4,7 +4,6 @@
 #include "GUI.h"
 #include <sstream>
 
-// ================================ Main Menu ================================
 void GUI::mainMenu( )
 {
 	
@@ -17,6 +16,7 @@ void GUI::mainMenu( )
 		setTextColor( COLOR );
 		printHeader( );	
 
+		cursorY = 13; //Toa do dau tien cua con tro
 		gotoxy( 20, 10); std::cout << "                     MAIN MENU                     ";
 		gotoxy( 20, 13); std::cout << "                       START                       ";
 		gotoxy( 20, 15); std::cout << "                      SETTINGS                     ";
@@ -71,6 +71,8 @@ void GUI::start( )
 
 void GUI::settings( )
 {
+	cursorY = 13;
+
 	while ( TRUE )
 	{
 		printHeader( ); 
@@ -94,154 +96,6 @@ void GUI::settings( )
 		}
 	}
 }
-void GUI::info( )		//In ra thong tin game
-{
-	printHeader( );
-
-	std::ifstream readme("README.txt");
-	std::string line, info;
-
-	while (readme)
-	{
-		getline(readme, line);
-		info += "\t\t\t" + line + "\n";
-	}
-
-	gotoxy(5, 10);
-	std::cout << info;
-	getch();
-}
-
-void GUI::quit( )		//thoat game
-{
-	if ( confirm( "EXIT" ) )
-		exit = TRUE;		//thoat game neu confirm = true
-	else 
-		exit = FALSE;
-}
-// ================================ End Main Menu ================================
-
-
-// ================================ START Menu ================================
-int GUI::play( )
-{
-	Table t;	// choi tren Table nay
-	srand(time(NULL)); //Sinh so ngau nhien
-
-	double timeDelay = 1000 - level * 100 ;	//thoi gian de roi
-	double tempTimeDelay = timeDelay;
-	int IDBrick, IDNextBrick; //So thu tu cua gach
-	score = 0; //Diem ban dau
-	lines = 0; //So hang da an duoc ban dau
-	
-	system( "cls" );
-	
-	//Tao 2 khoi gach dau tien
-	IDBrick = randIDBrick(); 
-	IDNextBrick = randIDBrick();
-	
-	//In ra background, level, line va score ban dau
-	printBackground( );
-	gotoxy( 12, 4 );
-	std::cout << level;
-	gotoxy( 12, 6 );
-	std::cout <<  score;
-	gotoxy( 12, 8 );
-	std::cout << lines;
-
-	do
-	{	
-		t.create( IDBrick );	//tao khoi moi
-
-		while ( t.checkEmpty( -1, 0 ) )
-		{
-			//In ra vien gach tiep theo va mau cua no
-			setTextColor( IDNextBrick + 7 );
-			t.printNextBrick( IDNextBrick );
-		
-			Sleep( ( tempTimeDelay ) );
-			int count = 5; //So lan xoay toi da trong timeDelay
-
-			while (--count  && kbhit() ) 				//doi phim an	
-	        {
-	        	KEY = key_press( );
-	        	if ( KEY == KEY_LEFT ) 			// dich trai neu nhap phim trai
-	        		t.moveLeft( );
-	        	else if ( KEY == KEY_RIGHT ) 		// dich phai neu nhap phim phai
-	        		t.moveRight( );
-	        	else if ( KEY == KEY_DOWN ) 		// roi luon neu nhap phim xuong
-	        		tempTimeDelay /= 10;
-	        	else if ( KEY == KEY_UP ) 		// xoay neu nhap phim len
-	        		t.rotate( );
-	        	else if ( KEY == PAUSE || KEY == ESCAPE )		// tam dung pause
-	        		while ( 1 ) //man hinh pause 
-	        		{
-	        			system( "cls" );	//xoa man hinh, chong gian lan
-
-	        			//In ra tuy chon o man hinh pause
-    					setTextColor( COLOR );
-	        			gotoxy( 20, 9 );
-	        			std::cout << "                   _____PAUSE_____                 ";
-	        			gotoxy( 20, 12 );
-	        			std::cout << "                       RESUME                      ";
-	        			gotoxy( 20, 14 );
-	        			std::cout << "                       RESTART                     ";
-	        			gotoxy( 20, 16 );
-	        			std::cout << "                      MAIN MENU                    ";
-	
-	        			int chosenMenu = cursor( 12, 16, 1 );
-					
-						//Thuc hien lenh tuy theo toa do con tro tuy chon
-						if(chosenMenu == 1 ) //tiep tuc
-						{
-							//In ra nen game, level, lines va score hien tai va tiep tuc game
-							printBackground( );
-							gotoxy( 12, 4 );
-							std::cout << level;
-							gotoxy( 12, 6 );
-							std::cout << score;
-							gotoxy( 12, 8 );
-							std::cout << lines;
-							break;
-						}
-						else if(chosenMenu == 2 && confirm("RESTART") ) //choi lai ( can  xac nhan )
-							return play( );
-						else if(chosenMenu == 3 && confirm("BACK TO MAIN MENU") ) //quay ve
-							return -1;
-							//return restart( );
-        		}	        		
-	    	}
-	    
-			t.moveDown( );		// dich xuong
-			
-	   	}
-	   	t.setBrickNum( IDBrick + 7 );
-	   	t.getFullRows( );	//Lay diem
-
-	   	//Tinh diem hien tai
-	   	score = score + level +  level * level * t.getDeletedLines() * t.getDeletedLines();
-	   	lines += t.getDeletedLines();
-
-	   	//In ra level, lines va score hien tai
-	   	setTextColor ( COLOR ); 
-	   	gotoxy( 12, 4 );
-		std::cout << level;
-	   	gotoxy( 12, 6 );
-		std::cout << score;
-		gotoxy( 12, 8 );
-		std::cout << lines;
-
-	   	IDBrick = IDNextBrick; //Gan khoi cu thanh khoi moi
-		IDNextBrick = randIDBrick(); //Tao khoi gach tiep theo
-
-		tempTimeDelay = timeDelay *= 0.99;
-		level = ( 1000 - timeDelay ) / 100;
-	} while ( t.checkGameOver() == 0 );
-
-	return score;	//lay diem 
-}
-
-// ================================ SETTINGS Menu ================================
 
 void GUI::settingsColor( )
 {
@@ -291,8 +145,6 @@ void GUI::settingsLevel( )
 	else if ( key == '3' ) level = 7;
 
 }
-
-// ================================ Ham ho tro ================================
 
 void GUI::setHighScore(int score)
 {
@@ -407,6 +259,32 @@ void GUI::printHighScore( )
 	getch();
 }
 
+void GUI::info( )		//In ra thong tin game
+{
+	printHeader( );
+
+	std::ifstream readme("README.txt");
+	std::string line, info;
+
+	while (readme)
+	{
+		getline(readme, line);
+		info += "\t\t\t" + line + "\n";
+	}
+
+	gotoxy(5, 10);
+	std::cout << info;
+	getch();
+}
+
+void GUI::quit( )		//thoat game
+{
+	if ( confirm( "EXIT" ) )
+		exit = TRUE;		//thoat game neu confirm = true
+	else 
+		exit = FALSE;
+}
+
 void GUI::printHeader( )
 {
 
@@ -418,6 +296,130 @@ void GUI::printHeader( )
 	gotoxy( 20, 4 ); std::cout << "  /  /   /  ____/     /  /   /  ___   //  //_______   /";
 	gotoxy( 20, 5 ); std::cout << " /  /   /  /____     /  /   /  /  /  //  / _______/  /";
 	gotoxy( 20, 6 ); std::cout << "/__/   /_______/    /__/   /__/  /__//__/ /_________/";
+}
+
+int randIDBrick() //Tao so ngau nhien la thu tu cua cac loai gach tu 0 - 6
+{	
+	return rand() % 7;
+}
+
+int GUI::play( )
+{
+	Table t;	// choi tren Table nay
+	srand(time(NULL)); //Sinh so ngau nhien
+
+	double timeDelay = 1000 - level * 100 ;	//thoi gian de roi
+	double tempTimeDelay = timeDelay;
+	int IDBrick, IDNextBrick; //So thu tu cua gach
+	score = 0; //Diem ban dau
+	lines = 0; //So hang da an duoc ban dau
+	
+	system( "cls" );
+	
+	//Tao 2 khoi gach dau tien
+	IDBrick = randIDBrick(); 
+	IDNextBrick = randIDBrick();
+	
+	//In ra background, level, line va score ban dau
+	printBackground( );
+	gotoxy( 12, 4 );
+	std::cout << level;
+	gotoxy( 12, 6 );
+	std::cout <<  score;
+	gotoxy( 12, 8 );
+	std::cout << lines;
+
+	do
+	{	
+		t.create( IDBrick );	//tao khoi moi
+
+		while ( t.checkEmpty( -1, 0 ) )
+		{
+			//In ra vien gach tiep theo va mau cua no
+			setTextColor( IDNextBrick + 7 );
+			t.printNextBrick( IDNextBrick );
+		
+			Sleep( ( tempTimeDelay ) );
+			int count = 5; //So lan xoay toi da trong timeDelay
+
+			while (--count  && kbhit() ) 				//doi phim an	
+	        {
+	        	KEY = key_press( );
+	        	if ( KEY == KEY_LEFT ) 			// dich trai neu nhap phim trai
+	        		t.moveLeft( );
+	        	else if ( KEY == KEY_RIGHT ) 		// dich phai neu nhap phim phai
+	        		t.moveRight( );
+	        	else if ( KEY == KEY_DOWN ) 		// roi luon neu nhap phim xuong
+	        		tempTimeDelay /= 10;
+	        	else if ( KEY == KEY_UP ) 		// xoay neu nhap phim len
+	        		t.rotate( );
+	        	else if ( KEY == PAUSE || KEY == ESCAPE )		// tam dung pause
+	        		while ( 1 ) //man hinh pause 
+	        		{
+	        			system( "cls" );	//xoa man hinh, chong gian lan
+
+	        			//In ra tuy chon o man hinh pause
+    					setTextColor( COLOR );
+	        			gotoxy( 20, 9 );
+	        			std::cout << "                   _____PAUSE_____                 ";
+	        			gotoxy( 20, 12 );
+	        			std::cout << "                       RESUME                      ";
+	        			gotoxy( 20, 14 );
+	        			std::cout << "                       RESTART                     ";
+	        			gotoxy( 20, 16 );
+	        			std::cout << "                      MAIN MENU                    ";
+	
+	        			int chosenMenu = cursor( 12, 14, 1 );
+					
+						//Thuc hien lenh tuy theo toa do con tro tuy chon
+						if(chosenMenu == 1 ) //tiep tuc
+						{
+							//In ra nen game, level, lines va score hien tai va tiep tuc game
+							printBackground( );
+							gotoxy( 12, 4 );
+							std::cout << level;
+							gotoxy( 12, 6 );
+							std::cout << score;
+							gotoxy( 12, 8 );
+							std::cout << lines;
+							break;
+						}
+						else if(chosenMenu == 2 && confirm("RESTART") ) //choi lai ( can  xac nhan )
+							return play( );
+						else if(chosenMenu == 3 && confirm("BACK TO MAIN MENU") ) //quay ve
+							return -1;
+							//return restart( );
+        		}	        		
+	    	}
+	    
+			t.moveDown( );		// dich xuong
+			
+	   	}
+	   	t.setBrickNum( IDBrick + 7 );
+	   	t.getFullRows( );	//Lay diem
+
+	   	//Tinh diem hien tai
+	   	score = score + level +  level * level * t.getDeletedLines() * t.getDeletedLines();
+	   	lines += t.getDeletedLines();
+
+	   	//In ra level, lines va score hien tai
+	   	setTextColor ( COLOR ); 
+	   	gotoxy( 12, 4 );
+		std::cout << level;
+	   	gotoxy( 12, 6 );
+		std::cout << score;
+		gotoxy( 12, 8 );
+		std::cout << lines;
+
+	   	IDBrick = IDNextBrick; //Gan khoi cu thanh khoi moi
+		IDNextBrick = randIDBrick(); //Tao khoi gach tiep theo
+
+		tempTimeDelay = timeDelay *= 0.99;
+		level = ( 1000 - timeDelay ) / 100;
+	} while ( t.checkGameOver() == 0 );
+
+	cursorY = 13; //Dat lai ve toa do ban dau
+	return score;	//lay diem 
 }
 
 void GUI::printBackground( )
@@ -460,3 +462,29 @@ void GUI::printBackground( )
 		std::cout << (char)223;	
 }
 
+void GUI::printCursor(int x1, int x2, int cursorY)
+{
+	gotoxy( x1, cursorY );
+	std::cout << (char) 175 << (char) 175 << (char) 175;
+	gotoxy( x2, cursorY );
+	std::cout << (char) 174 << (char) 174 << (char) 174;
+
+	//Xoa con tro tuy chon o vi tri cu
+	gotoxy( x1, cursorY+2 );
+	std::cout << "   ";
+	gotoxy( x2, cursorY+2 );
+	std::cout << "   ";
+
+	gotoxy( x1, cursorY-2 );
+	std::cout << "   ";
+	gotoxy( x2, cursorY-2 );
+	std::cout << "   ";
+}
+
+void GUI::delCursor(int x1, int x2, int cursorY)
+{
+	gotoxy( x1, cursorY );
+	std::cout << "   ";
+	gotoxy( x2, cursorY );
+	std::cout << "   ";
+}

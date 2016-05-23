@@ -11,7 +11,7 @@ private:
 	WORD COLOR; 
 	bool exit;
 	WORD KEY; //Phim vua nhap
-
+	int  cursorY; //Toa do con tro tuy chon
 public:
 
 	void mainMenu( );	//man hinh khoi dong
@@ -31,6 +31,10 @@ public:
 
 	void printBackground( ); //nen game
 	
+	void printCursor(int x1, int x2, int y); //In con tro tuy chon, x1, x2, y la toa do 
+	void delCursor(int x1, int x2, int y); //Xoa con tro tuy chon cu
+
+
 };
 
 
