@@ -265,3 +265,10 @@ void Table::delRow ( int row )	//xoa hang  row  (xoa den dau ve lai den do)
 }
 
 int Table::getDeletedLines ( ) const { return deletedLines; }
+
+
+int randIDBrick() //Tao so ngau nhien la thu tu cua cac loai gach tu 0 - 6
+{	
+	return rand() % 7;
+}
+
