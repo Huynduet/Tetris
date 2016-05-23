@@ -122,7 +122,7 @@ WORD key_press()
 	return UNKNOWN;	//ko co trong khai bao
 }
 
-void gotoxy(int x, int y)       //chuyen con tro ve vi tri x, y
+void gotoxy(int x, int y)       //chuyen con tro ve vi tri cot x, hang y
 {
     static HANDLE h = NULL;
     if(!h)
@@ -148,5 +148,64 @@ bool confirm( char const action[] )     //xac nhan lua chon
             return FALSE;
     }
 }
+void changeCursor( int oldPos, int newPos )
+{
+    //Xoa con tro tuy chon o vi tri cu
+    gotoxy( 28, oldPos );
+    std::cout << "   ";
+    gotoxy( 60, oldPos );
+    std::cout << "   ";
+
+    //Ve lai con tro tuy chon o vi tri ms
+    gotoxy( 28, newPos );
+    std::cout << (char) 175 << (char) 175 << (char) 175;
+    gotoxy( 60, newPos );
+    std::cout << (char) 174 << (char) 174 << (char) 174;
+
+
+}
+
+//tao con tro trong Menu
+//inp: 
+//  begin   : vi tri dau tien 
+//  end     : vi tri cuoi
+//  default : gia tri tra ve khi an ESC
+//out: thu tu cua lựa chọn, từ trên xuống
+int cursor ( int begin, int end, int defaut )
+{
+    WORD KEY;
+    int cursor = begin;
+
+    changeCursor( begin + 2, begin ); //In ra con tro tuy chon
+
+    while ( 1 )
+    {
+            KEY = key_press( );
+            if ( KEY == ESCAPE )
+                return defaut;
+
+            else if ( KEY == ENTER )
+                return ( cursor - begin) / 2 + 1;    
+
+            else if( KEY == KEY_DOWN ) //Di chuyen con tro xuong
+            {
+                //Thay doi toa do con tro tuy chon
+                if( cursor < end )
+                    changeCursor ( cursor - 2, cursor += 2 );
+                else if ( cursor == end )   
+                    changeCursor ( end, cursor = begin );     //ve dau            
+            }
+            
+            else if( KEY == KEY_UP ) //Di chuyen con tro len
+            {
+                //Thay doi toa do con tro tuy chon
+                if( cursor > begin )
+                    changeCursor ( cursor + 2, cursor -= 2 );
+                else if ( cursor== begin )   
+                    changeCursor ( begin, cursor = end );     //ve cuoi
+            }
+    }
+}
 
 #endif  //__CONSOLE_H__ 
+
