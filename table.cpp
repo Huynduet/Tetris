@@ -80,7 +80,7 @@ void Table::create ( int ID )
 	}
 	style = ID + 15;
 	setBrickNum( style );
-	tempScore = 0;
+	deletedLines = 0;
 }
 
 void Table::printNextBrick( int ID )
@@ -260,8 +260,15 @@ void Table::delRow ( int row )	//xoa hang  row  (xoa den dau ve lai den do)
 	for ( int j = row ; j < 21; ++j )
 		for ( int k = 1; k <= 10; ++k )
 			table[j][k] = table[j + 1][k];
-	tempScore ++;
+	deletedLines ++;
 	show( );	//ve lai
 }
 
-int Table::getScore ( ) const { return tempScore; }
+int Table::getDeletedLines ( ) const { return deletedLines; }
+
+
+int randIDBrick() //Tao so ngau nhien la thu tu cua cac loai gach tu 0 - 6
+{	
+	return rand() % 7;
+}
+
