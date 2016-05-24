@@ -2,7 +2,6 @@
 #include "table.cpp"
 #include "console.h"
 #include "GUI.h"
-#include <sstream>
 
 // ================================ Main Menu ================================
 void GUI::mainMenu( )
@@ -40,7 +39,7 @@ void GUI::mainMenu( )
 					info( );
 					break;
 				case 5:
-					quit( );
+				quit( );
 			}
 	}
 }
@@ -137,8 +136,8 @@ int GUI::play( )
 	system( "cls" );
 	
 	//Tao 2 khoi gach dau tien
-	IDBrick = randIDBrick(); 
-	IDNextBrick = randIDBrick();
+	IDBrick = createIDBrick(); 
+	IDNextBrick = createIDBrick();
 	
 	//In ra background, level, line va score ban dau
 	printBackground( );
@@ -232,7 +231,7 @@ int GUI::play( )
 		std::cout << lines;
 
 	   	IDBrick = IDNextBrick; //Gan khoi cu thanh khoi moi
-		IDNextBrick = randIDBrick(); //Tao khoi gach tiep theo
+		IDNextBrick = createIDBrick(); //Tao khoi gach tiep theo
 
 		tempTimeDelay = timeDelay *= 0.99;
 		level = ( 1000 - timeDelay ) / 100;
@@ -299,16 +298,26 @@ void GUI::setHighScore(int score)
 	char fileName[] = "HighScore.txt"; //Ten file chua high score
 	int i, h_score[10]; //10 diem cao nhat
 
-	//Kiem tra xem co dat high score khong???
-	std::ifstream highScore;
-	highScore.open(fileName);
+	std::fstream highScore(fileName, std::ios::in);
 
-	//Nhap 10 diem cao nhat tu file
-	for(i = 0; i < 10; i++)
+	if(!highScore.is_open()) //Tao file high score neu chua co
 	{
-		highScore >> h_score[i];
+		std::ofstream newHighScore(fileName);
+
+		for(i = 0; i < 10; i++)
+		{
+			h_score[i] = 0;
+			newHighScore << h_score[i] << std::endl;
+		}
+		newHighScore.close();
 	}
-	highScore.close();
+	else //Nhap diem neu da co file high score
+	{
+		for(i = 0; i < 10; i++)
+		{
+			highScore >> h_score[i];
+		}
+	}
 
 	//Tra ve neu khong dat high score
 	if(score < h_score[9])
@@ -322,9 +331,7 @@ void GUI::setHighScore(int score)
 		return;
 	}
 
-	//Ghi ra file neu dat high score
-	std::ofstream outputHighScore;
-	outputHighScore.open(fileName);
+	//Them diem hien tai neu dat high score
 	for(i = 8; i >= 0; i--)
 	{
 		if(score > h_score[i])
@@ -349,26 +356,42 @@ void GUI::setHighScore(int score)
 	std::cout << "                                                   ";
 
 	//Ghi ra file sau khi da them high score
+	highScore.open(fileName, std::ios::out);
+	highScore.seekp(0, std::ios::beg);
 	for(i = 0; i < 10; i++)
 	{
-		outputHighScore << h_score[i] << std::endl;
+		highScore << h_score[i] << std::endl;
 	}
-	outputHighScore.close();
+	highScore.close();
 }
 
 void GUI::printHighScore( )
 {
 	char fileName[] = "HighScore.txt"; //Ten file chua high score
 	int i, score[10]; //10 diem cao nhat
-	std::ifstream highScore;
+	std::ifstream highScore(fileName);
 	
 	//Lay diem da luu tu file highScore
-	highScore.open(fileName);
-	for(i = 0; i < 10; i++)
+	if(highScore.is_open()) //Luu diem neu da co file high score
 	{
-		highScore >> score[i];
+		for(i = 0; i < 10; i++)
+		{
+			highScore >> score[i];
+		}
+		highScore.close();	
 	}
-	highScore.close();
+	else 
+	{
+		//Tao file high score neu chua co
+		std::ofstream newHighScore(fileName);
+
+		for(i = 0; i < 10; i++)
+		{
+			score[i] = 0;
+			newHighScore << score[i] << std::endl;
+		}
+		newHighScore.close();
+	}
 
 	//In ra 10 diem cao nhat
 	printHeader( );
@@ -403,8 +426,9 @@ void GUI::printHighScore( )
 			std::cout << i+1 << ". " << score[i];
 		}
 	}
-	
+
 	getch();
+
 }
 
 void GUI::printHeader( )
