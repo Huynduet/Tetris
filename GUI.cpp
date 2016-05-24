@@ -1,18 +1,37 @@
 #include <sstream>
-
+#include <fstream>
 #include "table.h"
 #include "table.cpp"
 #include "console.h"
 #include "GUI.h"
 
+GUI::GUI( )
+{
+	level = 1; //Level ban dau
+	COLOR = LIGHTGREEN; //Mau mac dinh cua game
+
+	//Tao ten file chua highscore va README
+	strcpy ( pathHighScore, "HighScore.txt" ) ;
+	strcpy ( pathREADME, "README.txt" ) ;
+	
+	//Toa noi dung file README
+	sstringREADME << "\t\t\t----------------------------------------------- \n\n";
+    sstringREADME << "\t\t\tHOW TO PLAY \n\n";
+    sstringREADME << "\t\t\t -  USE  \n\n";
+    sstringREADME << "\t\t\t     W      OR    ^   TO PLAY \n";
+    sstringREADME << "\t\t\t   A S D        < v > \n\n";
+    sstringREADME << "\t\t\t -  PAUSE : ESC  |  P \n\n";
+    sstringREADME << "\t\t\t----------------------------------------------- \n\n";
+    sstringREADME << "\t\t\tDeveloped by:  \n\n";
+    sstringREADME << "\t\t\t     Nguyen Duc Huy \n";
+    sstringREADME << "\t\t\t     Nguyen Viet Hoang \n";
+        
+}
 // ================================ Main Menu ================================
 void GUI::mainMenu( )
 {
-	
-	level = 1; //Level ban dau
 	exit = FALSE;
-	COLOR = LIGHTGREEN; //Mau mac dinh cua game
-
+	
 	while ( !exit )		 		//chay den khi co lenh thoat
 	{
 		setTextColor( COLOR );
@@ -97,33 +116,22 @@ void GUI::settings( )
 }
 void GUI::info( )		//In ra thong tin game
 {
-	printHeader( );
-
-	std::stringstream sstringREADME;
-
-	sstringREADME << "\t\t\t----------------------------------------------- \n\n";
-    sstringREADME << "\t\t\tHOW TO PLAY \n\n";
-    sstringREADME << "\t\t\t -  USE  \n\n";
-    sstringREADME << "\t\t\t     W      OR    ^   TO PLAY \n";
-    sstringREADME << "\t\t\t   A S D        < v > \n\n";
-    sstringREADME << "\t\t\t -  PAUSE : ESC  |  P \n\n";
-    sstringREADME << "\t\t\t----------------------------------------------- \n\n";
-    sstringREADME << "\t\t\tDeveloped by:  \n\n";
-    sstringREADME << "\t\t\t     Nguyen Duc Huy \n";
-    sstringREADME << "\t\t\t     Nguyen Viet Hoang \n";
-
-	std::fstream fileREADME;
-    fileREADME.open("README.txt", std::ios::in);
-    SetFileAttributes("README.txt", FILE_ATTRIBUTE_READONLY);
-
+	printHeader( );	
+	
+	//Mo file README
+    fileREADME.open( pathREADME, std::ios::in );
+    
     if ( fileREADME.fail() )
     {
-        fileREADME.open("README.txt", std::ios::out); // tao file moi  
-        fileREADME << sstringREADME.str();
+        fileREADME.open( pathREADME, std::ios::out ); // Tao file moi neu chua co 
+        fileREADME << sstringREADME.str( );
     }
 
     fileREADME.close();
 
+    SetFileAttributes( pathREADME, FILE_ATTRIBUTE_READONLY );
+
+	//In ra noi dung file README
     gotoxy( 0, 10 );
 	std::cout << sstringREADME.str();
 
@@ -314,24 +322,21 @@ void GUI::settingsLevel( )
 
 void GUI::setHighScore(int score)
 {
-	char fileName[] = "HighScore.txt"; //Ten file chua high score
-	int i, h_score[10]; //10 diem cao nhat
-
-	std::fstream highScore;
-	highScore.open(fileName, std::ios::in | std::ios::out);
-
-	if(!highScore.is_open()) //Tao file high score neu chua co
-	{
-		for(i = 0; i < 10; i++)
+	int i;
+	//Tao highscore ban dau
+	for(i = 0; i < 10; i++)
 		{
 			h_score[i] = 0;
 		}
-	}
-	else //Nhap diem neu da co file high score
+	
+	SetFileAttributes( pathHighScore, FILE_ATTRIBUTE_NORMAL );
+	fileHighScore.open(pathHighScore, std::ios::in | std::ios::out);
+	//Nhap diem neu da co file high score
+	if(fileHighScore.is_open()) 
 	{
 		for(i = 0; i < 10; i++)
 		{
-			highScore >> h_score[i];
+			fileHighScore >> h_score[i];
 		}
 	}
 
@@ -358,7 +363,7 @@ void GUI::setHighScore(int score)
 	h_score[i+1] = score;
 
 	//In ra thong bao thang va vi tri tren bang high score 
-	if(i == -1)
+	if(i == -1) //Dat diem cao nhat
 	{
 		gotoxy( 20, 14 );
 		std::cout << "CONGRATULATIONS. YOU HAVE ARCHIEVED THE HIGHEST SCORE !!!";
@@ -371,43 +376,48 @@ void GUI::setHighScore(int score)
 	gotoxy( 24, 15 );
 	std::cout << "                                                   ";
 
+	//Tao file moi neu chua co
+	if(fileHighScore.fail()) 
+		fileHighScore.open( pathHighScore, std::ios::out );
+		
 	//Ghi ra file sau khi da them high score
-	highScore.open(fileName, std::ios::out);
-	highScore.seekp(0, std::ios::beg);
+	fileHighScore.seekp(0, std::ios::beg);
 	for(i = 0; i < 10; i++)
 	{
-		highScore << h_score[i] << std::endl;
+		fileHighScore << h_score[i] << std::endl;
 	}
-	highScore.close();
+	fileHighScore.close();
+	
+	SetFileAttributes( pathHighScore, FILE_ATTRIBUTE_READONLY );
 }
 
 void GUI::printHighScore( )
 {
-	char fileName[] = "HighScore.txt"; //Ten file chua high score
-	int i, score[10]; //10 diem cao nhat
-	std::fstream highScore;
-	highScore.open(fileName, std::ios::in);
+	int i;
 	
-	//Lay diem da luu tu file highScore
-	if(highScore.is_open()) //Luu diem neu da co file high score
+	fileHighScore.open ( pathHighScore, std::ios::in );
+	
+	//Lay diem da luu tu file fileHighScore
+	if(fileHighScore.is_open()) //Luu diem neu da co file high score
 	{
 		for(i = 0; i < 10; i++)
 		{
-			highScore >> score[i];
+			fileHighScore >> h_score[i];
 		}
-		highScore.close();	
+		fileHighScore.close();	
 	}
 	else 
 	{
 		//Tao file high score neu chua co
-		highScore.open(fileName, std::ios::out);
+		fileHighScore.open( pathHighScore, std::ios::out );
+		SetFileAttributes( pathHighScore, FILE_ATTRIBUTE_NORMAL );
 
 		for(i = 0; i < 10; i++)
 		{
-			score[i] = 0;
-			highScore << score[i] << std::endl;
+			h_score[i] = 0;
+			fileHighScore << h_score[i] << std::endl;
 		}
-		highScore.close();
+		fileHighScore.close();
 	}
 
 	//In ra 10 diem cao nhat
@@ -424,25 +434,27 @@ void GUI::printHighScore( )
 			if(i == 2)
 				setTextColor( GRAY );
 			gotoxy( 35, 13 + 2*i ); 
-			std::cout << i+1 << ".  " << score[i];
+			std::cout << i+1 << ".  " << h_score[i];
 		}
 		else if(i < 5)
 		{
 			setTextColor( LIGHTGRAY );
 			gotoxy( 35, 13 + 2*i ); 
-			std::cout << i+1 << ".  " << score[i];
+			std::cout << i+1 << ".  " << h_score[i];
 		}
 		else if(i < 9)
 		{
 			gotoxy( 50, 13 + 2*(i-5) ); 
-			std::cout << i+1 << ".  " << score[i];
+			std::cout << i+1 << ".  " << h_score[i];
 		}
 		else 
 		{
 			gotoxy( 50, 13 + 2*(i-5) ); 
-			std::cout << i+1 << ". " << score[i];
+			std::cout << i+1 << ". " << h_score[i];
 		}
 	}
+	
+	SetFileAttributes( pathHighScore, FILE_ATTRIBUTE_READONLY );
 
 	getch();
 
