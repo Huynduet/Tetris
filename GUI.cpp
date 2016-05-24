@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "table.h"
 #include "table.cpp"
 #include "console.h"
@@ -97,17 +99,34 @@ void GUI::info( )		//In ra thong tin game
 {
 	printHeader( );
 
-	std::ifstream readme("README.txt");
-	std::string line, info;
+	std::stringstream sstringREADME;
 
-	while (readme)
-	{
-		getline(readme, line);
-		info += "\t\t\t" + line + "\n";
-	}
+	sstringREADME << "\t\t\t----------------------------------------------- \n\n";
+    sstringREADME << "\t\t\tHOW TO PLAY \n\n";
+    sstringREADME << "\t\t\t -  USE  \n\n";
+    sstringREADME << "\t\t\t     W      OR    ^   TO PLAY \n";
+    sstringREADME << "\t\t\t   A S D        < v > \n\n";
+    sstringREADME << "\t\t\t -  PAUSE : ESC  |  P \n\n";
+    sstringREADME << "\t\t\t----------------------------------------------- \n\n";
+    sstringREADME << "\t\t\tDeveloped by:  \n\n";
+    sstringREADME << "\t\t\t     Nguyen Duc Huy \n";
+    sstringREADME << "\t\t\t     Nguyen Viet Hoang \n";
 
-	gotoxy(5, 10);
-	std::cout << info;
+	std::fstream fileREADME;
+    fileREADME.open("README.txt", std::ios::in);
+    SetFileAttributes("README.txt", FILE_ATTRIBUTE_READONLY);
+
+    if ( fileREADME.fail() )
+    {
+        fileREADME.open("README.txt", std::ios::out); // tao file moi  
+        fileREADME << sstringREADME.str();
+    }
+
+    fileREADME.close();
+
+    gotoxy( 0, 10 );
+	std::cout << sstringREADME.str();
+
 	getch();
 }
 
@@ -298,18 +317,15 @@ void GUI::setHighScore(int score)
 	char fileName[] = "HighScore.txt"; //Ten file chua high score
 	int i, h_score[10]; //10 diem cao nhat
 
-	std::fstream highScore(fileName, std::ios::in);
+	std::fstream highScore;
+	highScore.open(fileName, std::ios::in | std::ios::out);
 
 	if(!highScore.is_open()) //Tao file high score neu chua co
 	{
-		std::ofstream newHighScore(fileName);
-
 		for(i = 0; i < 10; i++)
 		{
 			h_score[i] = 0;
-			newHighScore << h_score[i] << std::endl;
 		}
-		newHighScore.close();
 	}
 	else //Nhap diem neu da co file high score
 	{
@@ -369,7 +385,8 @@ void GUI::printHighScore( )
 {
 	char fileName[] = "HighScore.txt"; //Ten file chua high score
 	int i, score[10]; //10 diem cao nhat
-	std::ifstream highScore(fileName);
+	std::fstream highScore;
+	highScore.open(fileName, std::ios::in);
 	
 	//Lay diem da luu tu file highScore
 	if(highScore.is_open()) //Luu diem neu da co file high score
@@ -383,14 +400,14 @@ void GUI::printHighScore( )
 	else 
 	{
 		//Tao file high score neu chua co
-		std::ofstream newHighScore(fileName);
+		highScore.open(fileName, std::ios::out);
 
 		for(i = 0; i < 10; i++)
 		{
 			score[i] = 0;
-			newHighScore << score[i] << std::endl;
+			highScore << score[i] << std::endl;
 		}
-		newHighScore.close();
+		highScore.close();
 	}
 
 	//In ra 10 diem cao nhat
