@@ -152,7 +152,7 @@ void Table::setBrickNum ( int number )
 
 bool Table::rotate ( )			//quay pi/2, neu la hinh vuong tra ve 0
 {
-	if ( style == 0 )	//la kieu O thi dung lai
+	if ( style == 15 )	//la kieu O thi dung lai
 		return FALSE;
 
 	int deltaX, deltaY;
